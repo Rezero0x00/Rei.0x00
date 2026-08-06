@@ -1,0 +1,107 @@
+{
+  "slug": "modbus-scada-data-bridge",
+  "title": "Modbus RTU-to-SCADA Data Bridge",
+  "category": "Instrumentation",
+  "date": "June 2026",
+  "role": "Instrumentation Engineer",
+  "excerpt": "Jembatan komunikasi yang menerjemahkan data instrumen berbasis Modbus RTU/RS-485 ke format yang dapat dibaca sistem SCADA berbasis web melalui backend Node.js.",
+  "tags": ["Modbus RTU", "RS-485", "Node.js"],
+  "coverImage": "/images/projects/modbus-scada-data-bridge/cover.jpg",
+
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Proyek ini membangun jembatan (bridge) antara perangkat instrumentasi lapangan yang berkomunikasi lewat Modbus RTU/RS-485 dengan sistem SCADA modern berbasis web. Backend Node.js membaca register Modbus dari perangkat lapangan secara berkala dan mengonversinya menjadi data JSON yang ditampilkan pada dashboard SCADA."
+    },
+    {
+      "type": "paragraph",
+      "text": "Latar belakang proyek adalah kebutuhan mengintegrasikan instrumen lama (legacy) yang hanya mendukung Modbus RTU dengan sistem monitoring modern tanpa mengganti seluruh instrumen lapangan yang sudah terpasang."
+    },
+    { "type": "heading", "text": "Alat dan bahan" },
+    {
+      "type": "table",
+      "columns": ["Komponen", "Jumlah", "Keterangan"],
+      "rows": [
+        ["Konverter USB-to-RS485", "1 unit", "Menghubungkan port serial gateway ke jalur RS-485"],
+        ["Transmiter Tekanan Modbus RTU", "1 unit", "Perangkat lapangan slave Modbus"],
+        ["Transmiter Suhu Modbus RTU", "1 unit", "Perangkat lapangan slave Modbus kedua"],
+        ["Resistor Terminasi 120Ω", "2 unit", "Terminasi ujung jalur RS-485"],
+        ["Mini PC / Raspberry Pi (Gateway)", "1 unit", "Menjalankan backend Node.js sebagai Modbus master"],
+        ["Kabel Twisted Pair Belden", "secukupnya", "Jalur komunikasi RS-485"]
+      ]
+    },
+    { "type": "heading", "text": "Desain sistem" },
+    {
+      "type": "paragraph",
+      "text": "Seluruh perangkat slave Modbus RTU terhubung pada satu jalur bus RS-485 secara daisy-chain, dengan resistor terminasi 120Ω di kedua ujung jalur untuk mencegah pantulan sinyal."
+    },
+    {
+      "type": "image",
+      "src": "/images/projects/modbus-scada-data-bridge/wiring.png",
+      "caption": "Topologi bus RS-485 daisy-chain dengan dua slave dan satu gateway"
+    },
+    {
+      "type": "table",
+      "columns": ["Dari", "Ke"],
+      "rows": [
+        ["Gateway (USB-RS485)", "Bus RS-485 (A/B)"],
+        ["Transmiter Tekanan (Slave ID 1)", "Bus RS-485 (A/B)"],
+        ["Transmiter Suhu (Slave ID 2)", "Bus RS-485 (A/B)"],
+        ["Resistor Terminasi", "Kedua ujung jalur bus"],
+        ["Gateway (Node.js Backend)", "Dashboard SCADA (WebSocket/HTTP)"]
+      ]
+    },
+    { "type": "heading", "text": "Perhitungan", "level": 3 },
+    {
+      "type": "formula",
+      "value": "interval_polling = 2000 ms per slave",
+      "note": "Backend polling register secara bergiliran ke tiap slave ID untuk menghindari tabrakan komunikasi pada satu bus bersama."
+    },
+    {
+      "type": "formula",
+      "value": "P(bar) = raw × (10 / 65535)",
+      "note": "Konversi register mentah 16-bit menjadi nilai tekanan aktual sesuai rentang kalibrasi transmiter."
+    },
+    {
+      "type": "formula",
+      "value": "timeout = 500 ms, retry = 3x",
+      "note": "Batas waktu tunggu respons sebelum backend menandai suatu slave sebagai offline."
+    },
+    { "type": "heading", "text": "Data pengujian" },
+    { "type": "paragraph", "text": "Contoh data hasil polling dua slave selama pengujian 15 menit." },
+    {
+      "type": "table",
+      "columns": ["Waktu", "Tekanan (bar)", "Suhu (°C)", "Slave Status", "Latensi (ms)"],
+      "rows": [
+        ["14:00", "4.21", "62.3", "Online", "48"],
+        ["14:03", "4.25", "62.8", "Online", "52"],
+        ["14:06", "4.30", "63.1", "Online", "45"],
+        ["14:09", "-", "63.5", "Slave 1 Timeout", "-"],
+        ["14:12", "4.28", "63.9", "Online", "61"],
+        ["14:15", "4.22", "64.0", "Online", "49"]
+      ]
+    },
+    { "type": "heading", "text": "Analisa" },
+    {
+      "type": "paragraph",
+      "text": "Rata-rata latensi respons dari slave Modbus berada di kisaran 45–61 ms, tergolong baik untuk kebutuhan pemantauan proses yang tidak menuntut kontrol waktu nyata sangat ketat."
+    },
+    {
+      "type": "paragraph",
+      "text": "Pada pukul 14:09 terjadi timeout pada slave tekanan (Slave ID 1), kemungkinan disebabkan gangguan sesaat pada jalur bus; sistem retry otomatis berhasil memulihkan komunikasi pada polling berikutnya."
+    },
+    {
+      "type": "quote",
+      "text": "Konversi register ke nilai fisik menggunakan faktor skala kalibrasi terbukti konsisten, tidak ditemukan penyimpangan nilai yang signifikan dibandingkan pembacaan manual pada alat ukur referensi."
+    },
+    { "type": "heading", "text": "Penutup" },
+    {
+      "type": "paragraph",
+      "text": "Bridge ini berhasil menjembatani instrumen lapangan berbasis Modbus RTU/RS-485 dengan sistem SCADA berbasis web tanpa perlu mengganti instrumen yang sudah terpasang, sekaligus menyediakan mekanisme deteksi dan pemulihan gangguan komunikasi otomatis."
+    },
+    {
+      "type": "paragraph",
+      "text": "Pengembangan lanjutan dapat mencakup dukungan Modbus TCP untuk skala jaringan yang lebih besar, serta sistem alarm dan logging historis untuk kebutuhan audit proses industri."
+    }
+  ]
+}

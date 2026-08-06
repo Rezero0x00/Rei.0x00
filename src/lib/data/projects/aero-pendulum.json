@@ -1,0 +1,91 @@
+{
+  "title": "Aero Pendulum — PID Control System",
+  "category": "Control System",
+  "date": "March 2026",
+  "role": "Control Systems Engineer",
+  "tags": ["PID Control", "Embedded Firmware", "Sensor Feedback", "Arduino"],
+
+  "abstract": {
+    "heading": "Abstrak dan Latar Belakang",
+    "paragraphs": [
+      "Aero Pendulum adalah sistem kendali posisi sudut menggunakan motor DC dengan propeller sebagai aktuator, di mana sebuah lengan pendulum dijaga agar tetap berada pada sudut referensi tertentu meskipun mendapat gangguan eksternal. Proyek ini dibuat untuk memahami penerapan kontrol PID (Proportional-Integral-Derivative) pada plant non-linear dengan dinamika gravitasi.",
+      "Secara umum, sistem loop tertutup (closed-loop) bekerja dengan membandingkan nilai setpoint (sudut referensi) terhadap nilai aktual yang dibaca oleh sensor sudut (rotary encoder / potentiometer), lalu menghasilkan sinyal error yang diproses oleh kontroler PID untuk menentukan besar PWM yang dikirim ke motor."
+    ],
+    "formula": "u(t) = Kp·e(t) + Ki∫e(t)dt + Kd·de(t)/dt",
+    "formulaNote": "dengan e(t) = sudut referensi − sudut aktual, dan u(t) = sinyal kendali (duty cycle PWM) yang dikirim ke driver motor."
+  },
+
+  "materials": {
+    "heading": "Alat dan Bahan",
+    "items": [
+      { "name": "Arduino Uno R3", "qty": "1 unit", "note": "Mikrokontroler utama, menjalankan loop kendali PID" },
+      { "name": "Motor DC Coreless + Propeller", "qty": "1 unit", "note": "Aktuator penghasil gaya dorong" },
+      { "name": "Driver Motor (MOSFET IRLZ44N)", "qty": "1 unit", "note": "Switching PWM ke motor" },
+      { "name": "Rotary Encoder / Potentiometer 10k", "qty": "1 unit", "note": "Sensor umpan balik sudut lengan" },
+      { "name": "Rangka Pendulum Aluminium", "qty": "1 set", "note": "Struktur mekanik lengan dan poros" },
+      { "name": "Power Supply 12V 3A", "qty": "1 unit", "note": "Catu daya motor" },
+      { "name": "Kabel Jumper & Breadboard", "qty": "secukupnya", "note": "Pengkabelan prototipe" }
+    ]
+  },
+
+  "design": {
+    "heading": "Desain Sistem",
+    "wiringNote": "Encoder terhubung ke pin analog Arduino sebagai input umpan balik, sementara output PWM dari Arduino dikirim ke gate MOSFET yang mengatur suplai daya ke motor DC. Ground sensor, driver, dan Arduino disatukan (common ground) untuk menghindari noise pembacaan.",
+    "wiring": [
+      { "from": "Potentiometer / Encoder (Signal)", "to": "Arduino A0" },
+      { "from": "Potentiometer (VCC / GND)", "to": "Arduino 5V / GND" },
+      { "from": "Arduino Pin 9 (PWM)", "to": "Gate MOSFET IRLZ44N" },
+      { "from": "Motor DC (+)", "to": "Drain MOSFET" },
+      { "from": "Power Supply 12V", "to": "Motor DC (VCC) & Source MOSFET ke GND" }
+    ],
+    "calculations": [
+      {
+        "title": "Konversi ADC ke Sudut",
+        "text": "Pembacaan ADC 10-bit (0–1023) dikonversi menjadi sudut 0–270° sesuai rentang mekanik potentiometer.",
+        "formula": "θ = (ADC_value / 1023) × 270°"
+      },
+      {
+        "title": "Tuning Parameter PID (dummy, hasil trial-error awal)",
+        "text": "Nilai awal ditentukan melalui metode Ziegler-Nichols kemudian di-fine tuning manual.",
+        "formula": "Kp = 4.2   Ki = 0.8   Kd = 1.5"
+      },
+      {
+        "title": "Batas Duty Cycle PWM",
+        "text": "Output PID dibatasi (clamping) agar tidak melebihi kapasitas PWM 8-bit Arduino.",
+        "formula": "u(t) dibatasi pada rentang 0–255"
+      }
+    ]
+  },
+
+  "data": {
+    "heading": "Data",
+    "note": "Contoh data pengujian respons sistem terhadap perubahan setpoint dari 0° ke 45° (data dummy).",
+    "columns": ["Waktu (s)", "Setpoint (°)", "Sudut Aktual (°)", "Error (°)", "PWM Output"],
+    "rows": [
+      ["0.0", "45", "0", "45", "255"],
+      ["0.5", "45", "18", "27", "210"],
+      ["1.0", "45", "33", "12", "150"],
+      ["1.5", "45", "41", "4", "95"],
+      ["2.0", "45", "46", "-1", "60"],
+      ["2.5", "45", "45", "0", "48"],
+      ["3.0", "45", "45", "0", "46"]
+    ]
+  },
+
+  "analysis": {
+    "heading": "Analisa",
+    "paragraphs": [
+      "Dari data pengujian, sistem menunjukkan respons naik (rise time) sekitar 1.5 detik untuk mencapai sekitar 90% dari nilai setpoint, dengan overshoot kecil sebesar ±1° pada detik ke-2.0 sebelum akhirnya settle di sekitar detik ke-2.5. Hal ini menunjukkan tuning PID yang digunakan sudah cukup baik untuk kondisi tanpa gangguan eksternal.",
+      "Komponen proporsional (Kp) berkontribusi besar terhadap respons cepat di awal, sementara komponen integral (Ki) berperan mengoreksi steady-state error yang tersisa. Komponen derivatif (Kd) membantu meredam osilasi berlebih sehingga overshoot tetap kecil.",
+      "Pada pengujian dengan gangguan eksternal (hembusan angin manual ke arah lengan), sistem mampu kembali ke posisi setpoint dalam waktu rata-rata 1.2 detik, menunjukkan kestabilan closed-loop yang cukup baik untuk skala prototipe."
+    ]
+  },
+
+  "conclusion": {
+    "heading": "Penutup",
+    "paragraphs": [
+      "Proyek Aero Pendulum berhasil mendemonstrasikan penerapan kontrol PID pada sistem mekanik dengan gangguan gravitasi, dan menjadi media belajar yang baik untuk memahami trade-off antara kecepatan respons, overshoot, dan stabilitas sistem.",
+      "Pengembangan selanjutnya dapat mencakup penambahan auto-tuning PID, penggunaan sensor IMU untuk pembacaan sudut yang lebih presisi, serta implementasi kontrol kaskade untuk menangani gangguan yang lebih kompleks."
+    ]
+  }
+}

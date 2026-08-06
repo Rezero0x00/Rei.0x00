@@ -1,0 +1,88 @@
+{
+  "slug": "lab-environment-monitoring-dashboard",
+  "title": "Real-Time Lab Environment Monitoring Dashboard",
+  "category": "Instrumentation",
+  "date": "February 2026",
+  "role": "Full Stack Developer",
+  "excerpt": "Dashboard pemantauan suhu, kelembapan, dan tekanan udara laboratorium secara real-time, menghubungkan sensor ESP32 ke browser lewat MQTT dan Socket.io.",
+  "tags": ["MQTT", "Socket.io", "Tailwind CSS v4", "ESP32"],
+  "coverImage": "/images/projects/lab-environment-monitoring-dashboard/cover.jpg",
+
+  "abstract": {
+    "paragraphs": [
+      "Proyek ini adalah dashboard web untuk memantau kondisi lingkungan laboratorium — suhu, kelembapan, dan tekanan udara — secara real-time. Data dari sensor dikirim melalui protokol MQTT ke backend Node.js, lalu diteruskan ke browser menggunakan Socket.io agar tampilan dashboard selalu ter-update tanpa perlu refresh halaman.",
+      "Tujuan utama proyek ini adalah memahami arsitektur end-to-end IoT monitoring: mulai dari akuisisi data di level sensor, transmisi data melalui broker MQTT, hingga visualisasi data secara real-time di sisi client."
+    ],
+    "formula": "y[n] = α·x[n] + (1 − α)·y[n−1]",
+    "formulaNote": "Exponential Moving Average (EMA) filter untuk menghaluskan noise pembacaan sensor sebelum dikirim ke dashboard, dengan α = 0.3 sebagai konstanta smoothing."
+  },
+
+  "materials": [
+    { "name": "ESP32 Devkit V1", "qty": "1 unit", "note": "Mikrokontroler dengan WiFi bawaan, publisher data sensor" },
+    { "name": "Sensor DHT22", "qty": "1 unit", "note": "Pembacaan suhu dan kelembapan" },
+    { "name": "Sensor BMP280", "qty": "1 unit", "note": "Pembacaan tekanan udara (komunikasi I2C)" },
+    { "name": "Mosquitto MQTT Broker", "qty": "1 instance", "note": "Perantara pesan antara ESP32 dan backend" },
+    { "name": "Node.js + Socket.io Server", "qty": "1 instance", "note": "Backend penerima data MQTT dan penyiar ke client" },
+    { "name": "Adaptor 5V 1A", "qty": "1 unit", "note": "Catu daya ESP32" },
+    { "name": "Kabel Jumper & Breadboard", "qty": "secukupnya", "note": "Pengkabelan prototipe" }
+  ],
+
+  "design": {
+    "wiringImage": "/images/projects/lab-environment-monitoring-dashboard/wiring.png",
+    "wiringNote": "DHT22 terhubung ke pin digital ESP32, sedangkan BMP280 terhubung lewat jalur I2C (SDA/SCL). ESP32 mengirim data hasil pembacaan ke MQTT broker melalui WiFi, tanpa kabel fisik ke server backend.",
+    "wiring": [
+      { "from": "DHT22 (Data)", "to": "ESP32 GPIO4" },
+      { "from": "BMP280 (SDA)", "to": "ESP32 GPIO21" },
+      { "from": "BMP280 (SCL)", "to": "ESP32 GPIO22" },
+      { "from": "DHT22 & BMP280 (VCC/GND)", "to": "ESP32 3V3 / GND" },
+      { "from": "ESP32 (WiFi)", "to": "MQTT Broker (topik lab/sensor)" }
+    ],
+    "calculations": [
+      {
+        "title": "Interval Publish Data",
+        "text": "ESP32 mem-publish payload sensor ke broker setiap interval tetap untuk menjaga beban jaringan tetap ringan.",
+        "formula": "interval = 5000 ms"
+      },
+      {
+        "title": "Konstanta Smoothing EMA",
+        "text": "Nilai α dipilih melalui percobaan agar noise berkurang tanpa membuat dashboard terasa lambat merespons perubahan nyata.",
+        "formula": "α = 0.3"
+      },
+      {
+        "title": "Ambang Batas Peringatan Kelembapan",
+        "text": "Dashboard menampilkan status peringatan ketika kelembapan melewati ambang batas aman ruangan.",
+        "formula": "alert = true, jika RH > 70%"
+      }
+    ]
+  },
+
+  "data": {
+    "note": "Contoh data pembacaan sensor selama pengujian 30 menit (data dummy).",
+    "chartImage": "/images/projects/lab-environment-monitoring-dashboard/chart.png",
+    "columns": ["Waktu", "Suhu (°C)", "Kelembapan (%)", "Tekanan (hPa)", "Status"],
+    "rows": [
+      ["09:00", "26.4", "58", "1011.2", "Normal"],
+      ["09:05", "26.6", "60", "1011.0", "Normal"],
+      ["09:10", "27.1", "63", "1010.8", "Normal"],
+      ["09:15", "27.8", "68", "1010.6", "Normal"],
+      ["09:20", "28.3", "72", "1010.5", "Alert"],
+      ["09:25", "28.0", "70", "1010.7", "Alert"],
+      ["09:30", "27.4", "65", "1010.9", "Normal"]
+    ]
+  },
+
+  "analysis": {
+    "paragraphs": [
+      "Rata-rata latensi dari sensor mempublish data hingga tampil di dashboard berada di kisaran 200–400 ms, cukup responsif untuk kebutuhan monitoring lab yang tidak memerlukan update dalam hitungan milidetik ketat.",
+      "Filter EMA cukup efektif meredam noise pembacaan DHT22 yang secara alami memiliki fluktuasi kecil antar sampel, sehingga grafik pada dashboard terlihat lebih halus tanpa kehilangan tren perubahan yang sebenarnya.",
+      "Pada pengujian 09:20–09:25, sistem berhasil mendeteksi kondisi kelembapan di atas ambang batas dan menampilkan status Alert secara real-time, menunjukkan logika threshold pada backend berjalan sesuai rancangan."
+    ]
+  },
+
+  "conclusion": {
+    "paragraphs": [
+      "Dashboard ini berhasil menunjukkan alur kerja monitoring IoT secara end-to-end, dari sensor hingga visualisasi real-time di browser, dengan latensi yang cukup baik untuk kebutuhan pemantauan lab sehari-hari.",
+      "Pengembangan selanjutnya dapat mencakup penyimpanan data historis ke database time-series, fitur ekspor data ke CSV, serta notifikasi otomatis ke email atau aplikasi chat ketika kondisi lingkungan melewati ambang batas."
+    ]
+  }
+}
