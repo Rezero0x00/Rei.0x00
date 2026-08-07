@@ -6,6 +6,7 @@
   // ---------------------------------------------------------------------
   let theme = $state('dark');
   let themeMenuOpen = $state(false);
+  let mobileMenuOpen = $state(false);
 
   function applyTheme(next) {
     theme = next;
@@ -21,6 +22,9 @@
   function handleWindowClick(e) {
     if (themeMenuOpen && !e.target.closest('.theme-switcher')) {
       themeMenuOpen = false;
+    }
+    if (mobileMenuOpen && !e.target.closest('.mobile-menu-wrap')) {
+      mobileMenuOpen = false;
     }
   }
 
@@ -236,15 +240,15 @@
   // NOTE: the first 4 are from the resume; the rest are placeholder examples —
   // swap in your own projects here.
   const projects = [
-    { id: 1, title: 'Real-Time Lab Environment Monitoring Dashboard', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['MQTT', 'Socket.io', 'Tailwind CSS v4'], slug: 'lab-environment-monitoring-dashboard' },
-    { id: 2, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'Embedded Firmware', 'Sensor Feedback'], slug: 'aero-pendulum' },
-    { id: 3, title: 'Smart Environmental Data Logger', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'smart-environmental-data-logger' },
-    { id: 4, title: 'Multi-Component Electronic Tester', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'multi-component-electronic-tester' },
-    { id: 5, title: 'Modbus RTU-to-SCADA Data Bridge', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },
-    { id: 6, title: 'Line-Following Robot with PID Steering', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'IR Sensors', 'Arduino'], slug: 'line-following-robot' },
-    { id: 7, title: 'IoT Weather Station', role: 'Embedded Systems Developer', category: 'Embedded', tags: ['ESP32', 'MQTT', 'WiFi'], slug: 'iot-weather-station' },
-    { id: 8, title: 'Precision Op-Amp Signal Conditioner', role: 'Analog Design', category: 'Analog', tags: ['Op-Amp', 'Filter Design', 'PCB'], slug: 'opamp-signal-conditioner' },
-    { id: 9, title: 'PLC-Based Conveyor Sorting System', role: 'Control Systems Engineer', category: 'Control System', tags: ['PLC', 'Ladder Logic', 'Sensor Integration'], slug: 'plc-conveyor-sorting-system' },
+    { id: 1, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'Embedded Firmware', 'Sensor Feedback'], slug: 'aero-pendulum' },
+    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['MQTT', 'Socket.io', 'Tailwind CSS v4'], slug: 'lab-environment-monitoring-dashboard' },
+    { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'smart-environmental-data-logger' },
+    { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'multi-component-electronic-tester' },
+    { id: 5, title: 'Project 1', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },
+    { id: 6, title: 'Project 2', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'IR Sensors', 'Arduino'], slug: 'line-following-robot' },
+    { id: 7, title: 'Project 3', role: 'Embedded Systems Developer', category: 'Embedded', tags: ['ESP32', 'MQTT', 'WiFi'], slug: 'iot-weather-station' },
+    { id: 8, title: 'Project 4', role: 'Analog Design', category: 'Analog', tags: ['Op-Amp', 'Filter Design', 'PCB'], slug: 'opamp-signal-conditioner' },
+    { id: 9, title: 'Project 5', role: 'Control Systems Engineer', category: 'Control System', tags: ['PLC', 'Ladder Logic', 'Sensor Integration'], slug: 'plc-conveyor-sorting-system' },
   ];
 
   // reset the visible slice back to 6 whenever the category filter changes
@@ -402,14 +406,14 @@
 
 <div class="min-h-screen text-[var(--text)] font-sans selection:bg-[var(--accent)]/30 selection:text-[var(--text)] relative z-10">
   <!-- NAV -->
-  <header class="fixed top-0 inset-x-0 z-40 border-b border-[var(--border)]/70 bg-[var(--bg)]/70 backdrop-blur">
+  <header class="mobile-menu-wrap fixed top-0 inset-x-0 z-40 border-b border-[var(--border)]/70 bg-[var(--bg)]/70 backdrop-blur">
     <nav class="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
       <button class="cursor-hover flex items-center gap-2 font-display font-bold text-lg tracking-tight" onclick={() => scrollToId('home')}>
         <span class="relative flex h-2 w-2">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
         </span>
-        <span class="text-[var(--accent)]">Rei</span>.0x00
+        <span class="text-[var(--accent)]">Rei.0x00</span>
       </button>
       <div class="flex items-center gap-8">
         <ul class="hidden sm:flex items-center gap-8 font-mono text-sm text-[var(--text-dim)]">
@@ -456,8 +460,43 @@
             </div>
           {/if}
         </div>
+
+        <button
+          class="cursor-hover sm:hidden flex items-center justify-center h-9 w-9 rounded-md border border-[var(--border)] text-[var(--text-dim)] hover:border-[var(--text)]/30 transition-colors"
+          onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            {#if mobileMenuOpen}
+              <path d="M6 6l12 12M18 6 6 18" />
+            {:else}
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            {/if}
+          </svg>
+        </button>
       </div>
     </nav>
+
+    {#if mobileMenuOpen}
+      <div class="sm:hidden border-t border-[var(--border)]/70 bg-[var(--bg)]">
+        <ul class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 font-mono text-sm text-[var(--text-dim)]">
+          {#each navLinks as link}
+            <li>
+              <button
+                class="cursor-hover w-full text-left py-2.5 hover:text-[var(--text)] transition-colors"
+                onclick={() => {
+                  mobileMenuOpen = false;
+                  scrollToId(link.id);
+                }}
+              >
+                {link.label}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
   </header>
 
   <!-- HOME / HERO -->
@@ -478,12 +517,12 @@
       <div class="absolute right-[22%] top-[10%] w-9 h-9 rounded-full border border-[var(--text-dim)]/40 pointer-events-none hidden md:block float-circle"></div>
 
       <p class="font-mono text-sm text-[var(--accent)] mb-4 hero-in" style="animation-delay: 0ms">Hello world;</p>
-      <h1 class="font-display font-bold text-5xl sm:text-7xl leading-[1.05] mb-4 hero-in" style="animation-delay: 80ms">{profile.name}</h1>
+      <h1 class="font-display font-bold text-4xl sm:text-6xl md:text-7xl leading-[1.1] sm:leading-[1.05] mb-4 hero-in" style="animation-delay: 80ms">{profile.name}</h1>
       <p class="text-xl text-[var(--text-dim)] mb-3 hero-in" style="animation-delay: 160ms">{profile.role}</p>
       <p class="max-w-xl text-[var(--text-dim)]/90 mb-10 leading-relaxed hero-in" style="animation-delay: 240ms">{profile.tagline}</p>
 
       <div class="flex flex-wrap gap-3 mb-16 hero-in" style="animation-delay: 320ms">
-        <a href={profile.resumeUrl} class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-sm font-mono">
+        <a href={profile.resumeUrl} class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--text)] text-[var(--bg)] transition-all duration-200 hover:opacity-85 hover:-translate-y-0.5 text-sm font-mono font-medium">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
           Resume
         </a>
@@ -509,7 +548,7 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="border-t border-[var(--border)]/70 py-28">
+  <section id="about" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-[300px_1fr] gap-14">
       <!-- photo column: square frame, quick facts sit underneath -->
       <div class="flex flex-col gap-6" use:reveal>
@@ -529,7 +568,7 @@
           <dl class="flex flex-col gap-3 font-mono text-xs text-[var(--text-dim)]">
             <div class="flex items-center gap-2">
               <svg class="shrink-0 text-[var(--text-faint)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              <span>Politeknik Caltex Riau · 5th Semester</span>
+              <span>Politeknik Caltex Riau</span>
             </div>
             <div class="flex items-center gap-2">
               <svg class="shrink-0 text-[var(--text-faint)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
@@ -568,7 +607,7 @@
   </section>
 
   <!-- SKILLS -->
-  <section id="skill" class="border-t border-[var(--border)]/70 py-28">
+  <section id="skill" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
       <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>02 — Skills</p>
       <h2 class="font-display font-bold text-4xl mb-14" use:reveal={{ delay: 60 }}>Skills</h2>
@@ -601,14 +640,14 @@
   </section>
 
   <!-- EDUCATION -->
-  <section id="education" class="border-t border-[var(--border)]/70 py-28">
+  <section id="education" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
       <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>03 — Education</p>
       <h2 class="font-display font-bold text-4xl mb-14" use:reveal={{ delay: 60 }}>Education</h2>
 
       <div class="flex flex-col gap-14">
         {#each education as edu, i}
-          <div class="grid md:grid-cols-[280px_1fr] gap-6 md:gap-14 border-t border-[var(--border)] pt-8" use:reveal={{ delay: i * 100 }}>
+          <div class="grid md:grid-cols-[300px_1fr] gap-6 md:gap-14 border-t border-[var(--border)] pt-8" use:reveal={{ delay: i * 100 }}>
             <!-- date / location sidebar, mirrors the About photo column width -->
             <div class="flex flex-col gap-2">
               <p class="font-mono text-xs text-[var(--text-faint)]">{String(i + 1).padStart(2, '0')}</p>
@@ -639,7 +678,7 @@
   </section>
 
   <!-- PROJECT -->
-  <section id="project" class="border-t border-[var(--border)]/70 py-28">
+  <section id="project" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
       <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>04 — Project</p>
       <h2 class="font-display font-bold text-4xl mb-4" use:reveal={{ delay: 60 }}>Projects</h2>
@@ -661,7 +700,7 @@
         {#each visibleProjects as project, i (project.id)}
           <a
             href="/project/{project.slug}"
-            class="cursor-hover group rounded-xl border border-[var(--border)] bg-[var(--surface)]/40 p-6 flex flex-col justify-between transition-all duration-300 hover:border-[var(--accent)]/50 hover:bg-[var(--surface)] hover:-translate-y-1.5 hover:shadow-lg"
+            class="cursor-hover group rounded-2xl border border-[var(--border)] bg-[var(--surface)]/40 p-6 flex flex-col justify-between transition-all duration-300 hover:border-[var(--accent)]/50 hover:bg-[var(--surface)] hover:-translate-y-1.5 hover:shadow-lg"
             use:reveal={{ delay: (i % 6) * 80 }}
           >
             <div class="flex items-start justify-between mb-6">
@@ -808,7 +847,8 @@
   @keyframes star-fall {
     0% { transform: translate(0, 0); opacity: 0; }
     8% { opacity: var(--peak-o); }
-    75% { opacity: var(--peak-o); }
+    50% { opacity: var(--peak-o); }
+    75% { opacity: calc(var(--peak-o) * 0.5); }
     100% { transform: translate(var(--dx), 100vh); opacity: 0; }
   }
 

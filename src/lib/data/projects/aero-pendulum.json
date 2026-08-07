@@ -1,91 +1,231 @@
 {
-  "title": "Aero Pendulum — PID Control System",
+  "slug": "aero-pendulum",
+  "title": "Aero Pendulum",
   "category": "Control System",
-  "date": "March 2026",
+  "date": "2026",
   "role": "Control Systems Engineer",
-  "tags": ["PID Control", "Embedded Firmware", "Sensor Feedback", "Arduino"],
+  "excerpt": "Sistem lengan pendulum yang diseimbangkan lewat gaya dorong motor DC berpropeller, dikendalikan dengan PID berbasis MATLAB Simulink untuk mempertahankan sudut lengan pada setpoint yang ditentukan.",
+  "tags": ["PID Control", "Underactuated System", "MATLAB Simulink", "Arduino"],
+  "coverImage": "/images/projects/aero-pendulum/cover.jpg",
 
-  "abstract": {
-    "heading": "Abstrak dan Latar Belakang",
-    "paragraphs": [
-      "Aero Pendulum adalah sistem kendali posisi sudut menggunakan motor DC dengan propeller sebagai aktuator, di mana sebuah lengan pendulum dijaga agar tetap berada pada sudut referensi tertentu meskipun mendapat gangguan eksternal. Proyek ini dibuat untuk memahami penerapan kontrol PID (Proportional-Integral-Derivative) pada plant non-linear dengan dinamika gravitasi.",
-      "Secara umum, sistem loop tertutup (closed-loop) bekerja dengan membandingkan nilai setpoint (sudut referensi) terhadap nilai aktual yang dibaca oleh sensor sudut (rotary encoder / potentiometer), lalu menghasilkan sinyal error yang diproses oleh kontroler PID untuk menentukan besar PWM yang dikirim ke motor."
-    ],
-    "formula": "u(t) = Kp·e(t) + Ki∫e(t)dt + Kd·de(t)/dt",
-    "formulaNote": "dengan e(t) = sudut referensi − sudut aktual, dan u(t) = sinyal kendali (duty cycle PWM) yang dikirim ke driver motor."
-  },
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Aero Pendulum adalah sistem lengan pendulum yang diseimbangkan bukan lewat motor servo yang dipasang langsung pada porosnya, melainkan lewat gaya dorong (thrust) dari motor DC berpropeller yang dipasang di ujung lengan. Sudut kemiringan lengan dibaca secara terus-menerus oleh sensor potensiometer, lalu dikendalikan agar tetap berada pada sudut setpoint yang ditentukan — bahkan ketika diberi gangguan dari luar."
+    },
+    {
+      "type": "paragraph",
+      "text": "Proyek ini dibuat untuk mempelajari kendali sistem underactuated, yaitu sistem yang jumlah aktuatornya lebih sedikit daripada derajat kebebasan yang perlu dikendalikan: satu motor harus mengatur pergerakan lengan pada satu sumbu rotasi penuh. Selain itu, proyek ini sekaligus menjadi latihan langsung tuning PID pada plant dengan dinamika non-linear, karena pengaruh gravitasi pada lengan membuat gaya pemulih berubah mengikuti sin(θ), bukan berbanding lurus terhadap sudutnya."
+    },
+    {
+      "type": "paragraph",
+      "text": "Dinamika lengan pendulum didekati melalui kesetimbangan torsi di sekitar poros putarnya, dengan J sebagai momen inersia lengan, b koefisien gesekan (damping), m massa lengan, g percepatan gravitasi, l jarak pusat massa ke poros, Kₘ konstanta gaya dorong motor terhadap sinyal PWM, dan u(t) sinyal kendali."
+    },
+    {
+      "type": "formula",
+      "value": "J·θ̈(t) + b·θ̇(t) + m·g·l·sin(θ(t)) = Kₘ·u(t)",
+      "note": "Persamaan gerak lengan pendulum berdasarkan kesetimbangan torsi."
+    },
+    {
+      "type": "paragraph",
+      "text": "Di sekitar titik kerja kecil (θ ≈ 0) berlaku pendekatan sin(θ) ≈ θ, sehingga dengan transformasi Laplace diperoleh fungsi alih plant orde dua berikut, yang menjadi dasar pemahaman bahwa sistem berpotensi berosilasi di sekitar titik setimbangnya."
+    },
+    {
+      "type": "formula",
+      "value": "G(s) = θ(s)/U(s) = Kₘ / (J·s² + b·s + m·g·l)",
+      "note": "Fungsi alih plant hasil linierisasi di sekitar θ ≈ 0. Karena parameter fisik J, b, Kₘ, dan m·g·l sulit diukur presisi, TF ini hanya dipakai sebagai landasan konseptual — tuning PID dilakukan langsung pada hardware."
+    },
+    {
+      "type": "formula",
+      "value": "u(t) = Kp·e(t) + Ki·∫e(τ)dτ + Kd·de(t)/dt",
+      "note": "Sinyal kendali PID umum, dengan e(t) = θref − θ(t)."
+    },
 
-  "materials": {
-    "heading": "Alat dan Bahan",
-    "items": [
-      { "name": "Arduino Uno R3", "qty": "1 unit", "note": "Mikrokontroler utama, menjalankan loop kendali PID" },
-      { "name": "Motor DC Coreless + Propeller", "qty": "1 unit", "note": "Aktuator penghasil gaya dorong" },
-      { "name": "Driver Motor (MOSFET IRLZ44N)", "qty": "1 unit", "note": "Switching PWM ke motor" },
-      { "name": "Rotary Encoder / Potentiometer 10k", "qty": "1 unit", "note": "Sensor umpan balik sudut lengan" },
-      { "name": "Rangka Pendulum Aluminium", "qty": "1 set", "note": "Struktur mekanik lengan dan poros" },
-      { "name": "Power Supply 12V 3A", "qty": "1 unit", "note": "Catu daya motor" },
-      { "name": "Kabel Jumper & Breadboard", "qty": "secukupnya", "note": "Pengkabelan prototipe" }
-    ]
-  },
+    { "type": "heading", "text": "Alat dan Bahan" },
+    {
+      "type": "table",
+      "columns": ["Komponen", "Jumlah", "Keterangan"],
+      "rows": [
+        ["Arduino Uno (ATmega328P)", "1 unit", "Mikrokontroler utama; membaca sudut dari potensiometer lewat ADC 10-bit, menjembatani perhitungan PID dengan MATLAB, dan mengeluarkan sinyal PWM ke driver motor."],
+        ["Potensiometer RV09", "1 unit", "Sensor sudut berbasis voltage divider dengan rotasi mekanis 280° ± 5°; membaca posisi lengan sebagai umpan balik pada loop kendali."],
+        ["Motor DC N50 + Propeller", "1 unit", "Aktuator utama; menghasilkan gaya dorong berdasarkan prinsip aksi-reaksi untuk mengangkat lengan menuju sudut setpoint."],
+        ["Driver Motor TA6586", "1 unit", "Modul H-Bridge yang menjembatani sinyal PWM Arduino (arus rendah) dengan daya motor (arus tinggi); dilengkapi proteksi over-temperature & short-circuit."],
+        ["Power Supply 5V DC", "1 unit", "Sumber daya eksternal yang menjaga tegangan Arduino dan potensiometer tetap stabil walau motor menarik arus tinggi."]
+      ]
+    },
 
-  "design": {
-    "heading": "Desain Sistem",
-    "wiringNote": "Encoder terhubung ke pin analog Arduino sebagai input umpan balik, sementara output PWM dari Arduino dikirim ke gate MOSFET yang mengatur suplai daya ke motor DC. Ground sensor, driver, dan Arduino disatukan (common ground) untuk menghindari noise pembacaan.",
-    "wiring": [
-      { "from": "Potentiometer / Encoder (Signal)", "to": "Arduino A0" },
-      { "from": "Potentiometer (VCC / GND)", "to": "Arduino 5V / GND" },
-      { "from": "Arduino Pin 9 (PWM)", "to": "Gate MOSFET IRLZ44N" },
-      { "from": "Motor DC (+)", "to": "Drain MOSFET" },
-      { "from": "Power Supply 12V", "to": "Motor DC (VCC) & Source MOSFET ke GND" }
-    ],
-    "calculations": [
-      {
-        "title": "Konversi ADC ke Sudut",
-        "text": "Pembacaan ADC 10-bit (0–1023) dikonversi menjadi sudut 0–270° sesuai rentang mekanik potentiometer.",
-        "formula": "θ = (ADC_value / 1023) × 270°"
-      },
-      {
-        "title": "Tuning Parameter PID (dummy, hasil trial-error awal)",
-        "text": "Nilai awal ditentukan melalui metode Ziegler-Nichols kemudian di-fine tuning manual.",
-        "formula": "Kp = 4.2   Ki = 0.8   Kd = 1.5"
-      },
-      {
-        "title": "Batas Duty Cycle PWM",
-        "text": "Output PID dibatasi (clamping) agar tidak melebihi kapasitas PWM 8-bit Arduino.",
-        "formula": "u(t) dibatasi pada rentang 0–255"
-      }
-    ]
-  },
+    { "type": "heading", "text": "Desain Sistem" },
+    { "type": "heading", "text": "Arsitektur", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Arsitektur sistem ini menggambarkan alur data mulai dari sensor sudut (potensiometer), diproses oleh mikrokontroler Arduino Uno, hingga akhirnya menggerakkan motor DC. Laptop yang menjalankan MATLAB berperan sebagai pusat kendali sekaligus monitoring sistem."
+    },
+    {
+      "type": "paragraph",
+      "text": "Secara konsep sistem kendali, diagram ini menunjukkan mekanisme closed-loop: sinyal error e(t), yang merupakan selisih antara referensi r(t) dan umpan balik dari potensiometer yₘ(t), diolah oleh kontroler PID untuk menghasilkan sinyal kendali u(t) yang mengatur pergerakan motor DC."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Diagram blok sistem kontrol closed-loop"
+    },
+    { "type": "heading", "text": "Wiring", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Potensiometer dihubungkan sebagai voltage divider: kaki 1 ke GND, kaki 3 ke 5V, dan wiper (kaki tengah) ke pin analog A3 Arduino. Nilai ADC hasil pembacaan pin A3 dikonversi menjadi sinyal PWM pada pin digital 9, yang diteruskan ke pin IN pada driver motor TA6586. GND driver disatukan dengan GND Arduino (common ground) agar referensi tegangan pada kedua rangkaian tetap sama. Terminal daya driver (+/–) dihubungkan ke power supply 5V eksternal, sedangkan motor DC tersambung langsung ke output driver."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Skematik pengkabelan Arduino Uno – Driver TA6586 – Motor DC"
+    },
 
-  "data": {
-    "heading": "Data",
-    "note": "Contoh data pengujian respons sistem terhadap perubahan setpoint dari 0° ke 45° (data dummy).",
-    "columns": ["Waktu (s)", "Setpoint (°)", "Sudut Aktual (°)", "Error (°)", "PWM Output"],
-    "rows": [
-      ["0.0", "45", "0", "45", "255"],
-      ["0.5", "45", "18", "27", "210"],
-      ["1.0", "45", "33", "12", "150"],
-      ["1.5", "45", "41", "4", "95"],
-      ["2.0", "45", "46", "-1", "60"],
-      ["2.5", "45", "45", "0", "48"],
-      ["3.0", "45", "45", "0", "46"]
-    ]
-  },
+    { "type": "heading", "text": "Perancangan Mekanik & Desain 3D" },
+    {
+      "type": "paragraph",
+      "text": "Struktur Aero Pendulum menggabungkan beberapa jenis material sesuai fungsinya: rangka dan alas dari lembaran akrilik sebagai penopang utama yang kokoh, pipa aluminium (Ø luar 8 mm) sebagai lengan pendulum karena ringan namun cukup kuat menahan beban motor di ujungnya, serta beberapa komponen kustom hasil 3D printing (filamen PLA, teknologi FDM) untuk bagian yang tidak tersedia di pasaran. Kombinasi ini dipilih agar bagian ayunan tetap ringan sementara strukturnya tetap stabil sebagai penopang beban."
+    },
+    {
+      "type": "gallery",
+      "images": [
+        { "src": "", "caption": "Braket Motor — dudukan motor DC agar terpasang kokoh dan tidak bergeser saat sistem beroperasi." },
+        { "src": "", "caption": "Busur 180° — skala acuan untuk membaca dan mengamati sudut pergerakan lengan secara visual selama pengujian." },
+        { "src": "", "caption": "Jarum Busur — penunjuk yang bergerak mengikuti arah ayunan lengan, memudahkan pembacaan sudut secara akurat." }
+      ],
+      "caption": "Komponen kustom hasil desain 3D sebelum dicetak (3D printing, PLA, FDM)."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Tee Pipa — elemen penyambung antar bagian rangka sekaligus titik pemasangan komponen mekanik lainnya."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Desain 3D modul Aero Pendulum — gabungan seluruh komponen mekanik & elektronik sebagai satu kesatuan sistem."
+    },
 
-  "analysis": {
-    "heading": "Analisa",
-    "paragraphs": [
-      "Dari data pengujian, sistem menunjukkan respons naik (rise time) sekitar 1.5 detik untuk mencapai sekitar 90% dari nilai setpoint, dengan overshoot kecil sebesar ±1° pada detik ke-2.0 sebelum akhirnya settle di sekitar detik ke-2.5. Hal ini menunjukkan tuning PID yang digunakan sudah cukup baik untuk kondisi tanpa gangguan eksternal.",
-      "Komponen proporsional (Kp) berkontribusi besar terhadap respons cepat di awal, sementara komponen integral (Ki) berperan mengoreksi steady-state error yang tersisa. Komponen derivatif (Kd) membantu meredam osilasi berlebih sehingga overshoot tetap kecil.",
-      "Pada pengujian dengan gangguan eksternal (hembusan angin manual ke arah lengan), sistem mampu kembali ke posisi setpoint dalam waktu rata-rata 1.2 detik, menunjukkan kestabilan closed-loop yang cukup baik untuk skala prototipe."
-    ]
-  },
+    { "type": "heading", "text": "Implementasi dan Perhitungan Sistem Kendali" },
+    { "type": "heading", "text": "1. Kalibrasi Sensor Sudut (Konversi ADC → Derajat)", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Sebelum bisa dipakai sebagai umpan balik, nilai mentah ADC dari potensiometer perlu dikalibrasi dulu ke satuan derajat. Caranya dengan mengambil dua titik acuan: pada posisi lengan diam, nilai ADC yang terbaca adalah 660, sedangkan pada sudut maksimum mekanik sistem sebesar 135°, nilai ADC yang terbaca adalah 91. Dari selisih kedua titik ini didapat gain kalibrasi K, yang dipakai untuk mengubah setiap pembacaan ADC menjadi sudut aktual θ secara real-time."
+    },
+    {
+      "type": "formula",
+      "value": "K = 135 / (660 − 91)  →  θ = K × (660 − ADC)",
+      "note": "Diterapkan pada blok Gain di MATLAB Simulink, sehingga sudut sudah dalam satuan derajat, bukan angka mentah 0–1023."
+    },
 
-  "conclusion": {
-    "heading": "Penutup",
-    "paragraphs": [
-      "Proyek Aero Pendulum berhasil mendemonstrasikan penerapan kontrol PID pada sistem mekanik dengan gangguan gravitasi, dan menjadi media belajar yang baik untuk memahami trade-off antara kecepatan respons, overshoot, dan stabilitas sistem.",
-      "Pengembangan selanjutnya dapat mencakup penambahan auto-tuning PID, penggunaan sensor IMU untuk pembacaan sudut yang lebih presisi, serta implementasi kontrol kaskade untuk menangani gangguan yang lebih kompleks."
-    ]
-  }
+    { "type": "heading", "text": "2. Rangkaian Kendali pada MATLAB Simulink", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Alurnya dimulai dari blok Arduino Analog Read pada pin A3, dikurangi offset (660), lalu dikalikan blok Gain berisi konstanta kalibrasi K sehingga menjadi sudut aktual dalam derajat. Sudut aktual dibandingkan dengan setpoint pada sum block untuk menghasilkan error, yang menjadi masukan blok PID Controller. Keluaran PID diteruskan ke blok Saturation untuk membatasi sinyal kendali agar tidak melebihi rentang PWM yang aman, lalu dikirim lewat blok PWM Output pada pin digital 9 menuju driver motor. Blok Display dan Scope dipakai untuk memantau nilai sudut aktual serta respons sudut terhadap waktu secara real-time."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Blok program kendali pada MATLAB Simulink"
+    },
+
+    { "type": "heading", "text": "3. Tuning Kontroler PID — Metode Ziegler-Nichols", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Karena parameter fisik plant sulit diukur secara analitis, nilai awal Kp, Ki, dan Kd ditentukan langsung dari respons hardware menggunakan metode Ziegler-Nichols berbasis closed-loop (ultimate gain method): Ki dan Kd dinolkan, lalu Kp dinaikkan bertahap sampai sistem menunjukkan osilasi berkelanjutan dengan amplitudo konstan (sustained oscillation). Kp pada kondisi ini disebut gain kritis (Kᵤ), dan periode osilasinya disebut periode kritis (Tᵤ)."
+    },
+    {
+      "type": "table",
+      "columns": ["Parameter", "Rumus"],
+      "rows": [
+        ["Kp", "0,6 × Kᵤ"],
+        ["Ti (waktu integral)", "0,5 × Tᵤ"],
+        ["Td (waktu derivative)", "0,125 × Tᵤ"],
+        ["Ki", "1,2 × Kᵤ / Tᵤ"],
+        ["Kd", "0,075 × Kᵤ × Tᵤ"]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Parameter hasil perhitungan Ziegler-Nichols murni ternyata belum memuaskan saat diuji langsung pada hardware — respons lengan cenderung overshoot besar dan lambat stabil. Karena itu dilakukan fine tuning manual pada ketiga parameter sampai ditemukan kombinasi yang membuat lengan bergerak lebih halus, tidak berosilasi berlebihan, dan lebih cepat menyesuaikan diri terhadap target."
+    },
+    {
+      "type": "table",
+      "columns": ["Parameter", "Nilai"],
+      "rows": [
+        ["Proportional (P)", "0.95"],
+        ["Integral (I)", "1.3"],
+        ["Derivative (D)", "0.22"]
+      ],
+      "note": "Kombinasi akhir hasil fine tuning yang dipakai pada blok PID Controller di Simulink."
+    },
+
+    { "type": "heading", "text": "Data" },
+    {
+      "type": "paragraph",
+      "text": "Pengujian dilakukan bertahap: sensor & aktuator, komunikasi serial Arduino–MATLAB, closed-loop dengan tiga nilai setpoint (45°, 60°, 90°), dan ketahanan terhadap gangguan eksternal (disturbance rejection)."
+    },
+    {
+      "type": "table",
+      "columns": ["Set Point", "Rise Time (s)", "Settling Time (s)", "Overshoot (%)", "Error Steady-State"],
+      "rows": [
+        ["45°", "2,8", "4", "8", "0,5°"],
+        ["60°", "2,7", "4,5", "5", "0,5°"],
+        ["90°", "4", "4,5", "3", "2°"]
+      ]
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Respons sudut aktual terhadap waktu — setpoint 45°"
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Respons sudut aktual terhadap waktu — setpoint 60°"
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Respons sudut aktual terhadap waktu — setpoint 90°"
+    },
+
+    { "type": "heading", "text": "Ketahanan terhadap Gangguan (Disturbance)", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Gangguan berupa dorongan manual diberikan pada lengan saat sistem berada dalam kondisi steady-state. Sistem mampu kembali ke sudut referensi dalam waktu sekitar 1,2 detik tanpa osilasi berkepanjangan."
+    },
+    {
+      "type": "image",
+      "src": "",
+      "caption": "Respons sistem saat diberi gangguan eksternal (disturbance rejection)"
+    },
+
+    { "type": "heading", "text": "Analisa" },
+    {
+      "type": "paragraph",
+      "text": "Dari ketiga variasi setpoint, terlihat pola konsisten: semakin besar sudut referensi, settling time cenderung sedikit meningkat sementara rise time relatif stabil. Ini wajar secara fisis — semakin besar sudut lengan, semakin besar pula komponen torsi gravitasi (m·g·l·sinθ) yang harus dilawan motor, sehingga plant bersifat non-linear terhadap posisi sudutnya."
+    },
+    {
+      "type": "paragraph",
+      "text": "Overshoot pada seluruh pengujian tergolong kecil (di bawah 15%), menandakan kontroler PID hasil fine tuning cukup efektif meredam osilasi berlebih dibanding parameter awal Ziegler-Nichols. Error steady-state sebesar 0,5°–2° kemungkinan bersumber dari resolusi ADC 10-bit pada potensiometer serta gesekan mekanik pada poros lengan yang belum sepenuhnya dikompensasi oleh aksi integral kontroler."
+    },
+    {
+      "type": "quote",
+      "text": "Waktu pemulihan ±1,2 detik pada uji disturbance rejection menegaskan keunggulan pendekatan tuning empiris (Ziegler-Nichols + fine tuning manual) untuk plant dengan non-linearitas mekanik yang sulit dimodelkan secara analitis, seperti gesekan dan backlash."
+    },
+    {
+      "type": "paragraph",
+      "text": "Integrasi Arduino–MATLAB via komunikasi serial USB terbukti stabil: tidak ditemukan data loss maupun delay signifikan selama monitoring, sehingga blok kalibrasi, PID, dan Scope pada Simulink dapat diandalkan sebagai pusat kendali real-time, bukan sekadar alat pemantauan pasif."
+    },
+
+    { "type": "heading", "text": "Kesimpulan" },
+    {
+      "type": "paragraph",
+      "text": "Aero Pendulum berhasil dirancang dan dibangun sebagai plant fisik underactuated yang merepresentasikan karakteristik sistem kendali dinamis secara nyata — mulai dari rise time, overshoot, settling time, hingga kestabilan sistem secara keseluruhan. Integrasi Arduino–MATLAB melalui komunikasi serial juga berjalan stabil, sehingga akuisisi dan visualisasi data sudut dapat dilakukan secara real-time tanpa kendala berarti."
+    },
+    {
+      "type": "paragraph",
+      "text": "Dari sisi kendali, kontroler PID hasil Ziegler-Nichols yang disempurnakan lewat fine tuning (P=0.95, I=1.3, D=0.22) terbukti mampu mengarahkan lengan menuju sudut referensi dengan overshoot di bawah 15% dan error steady-state kecil (0,5°–2°), serta menunjukkan kemampuan disturbance rejection yang baik. Secara keseluruhan, Aero Pendulum berpotensi menjadi media pembelajaran praktikum sistem kendali yang efektif sekaligus terjangkau untuk mempelajari konsep kendali underactuated dan non-linear secara langsung."
+    }
+  ]
 }
