@@ -62,7 +62,7 @@
           <svelte:element
             this={block.level === 3 ? 'h3' : 'h2'}
             class={block.level === 3
-              ? 'font-display font-semibold text-sm uppercase tracking-wider text-[var(--text-dim)] -mb-4'
+              ? 'font-mono font-semibold text-xs uppercase tracking-widest text-[var(--text)] -mb-3'
               : 'block-heading font-display font-semibold text-[1.55rem] tracking-tight pt-2 -mb-4'}
           >
             {block.text}
@@ -183,6 +183,18 @@
     --accent-dim: #3a3c44;
     color-scheme: dark;
   }
+  :global(:root.theme-light) {
+    --bg: #f6f6f8;
+    --surface: #ffffff;
+    --surface-2: #eeeef2;
+    --border: #e3e3e8;
+    --text: #14151a;
+    --text-dim: #55575f;
+    --text-faint: #8a8d98;
+    --accent: #14151a;
+    --accent-dim: #c7c8cf;
+    color-scheme: light;
+  }
   :global(html),
   :global(body) {
     background-color: var(--bg);
@@ -200,7 +212,7 @@
   .topbar {
     position: sticky;
     top: 0;
-    background: rgba(8, 8, 10, 0.85);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
     backdrop-filter: blur(8px);
     z-index: 10;
   }

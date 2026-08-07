@@ -183,18 +183,22 @@
 
   // ---------------------------------------------------------------------
   // SKILLS — grouped by domain, synced with resume
+  // Order: Instrumentation & Control -> Embedded Systems & Communication
+  // Protocols (merged, since they go together) -> Programming -> Tools ->
+  // Soft Skills (trimmed to the most relevant ones).
   // ---------------------------------------------------------------------
   const skillGroups = [
-    { title: 'Instrumentation & Control', icon: 'gauge', items: ['PID Control', 'Closed-Loop Feedback', 'Sensor Calibration', 'Control System Design', 'Signal Conditioning', 'Data Acquisition'] },
-    { title: 'Embedded Systems & Hardware', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensor Integration', 'Actuator Control'] },
-    { title: 'Communication Protocols', icon: 'link', items: ['UART', 'I2C', 'SPI', 'Modbus RTU/RS-485', 'MQTT'] },
+    { title: 'Instrumentation', icon: 'gauge', items: ['Sensor Calibration', 'Signal Conditioning', 'Data Acquisition'] },
+    { title: 'Control', icon: 'loop', items: ['PID Control', 'Closed-Loop Feedback', 'Control System Design'] },
+    { title: 'Embedded Systems', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensor Integration', 'Actuator Control', 'UART', 'I2C', 'SPI', 'Modbus RTU/RS-485', 'MQTT'] },
     { title: 'Programming', icon: 'code', items: ['C/C++', 'Python', 'TypeScript'] },
     { title: 'Tools & Software', icon: 'wrench', items: ['LabVIEW', 'Multisim', 'MATLAB', 'Arduino IDE', 'Visual Studio Code', 'GitHub'] },
-    { title: 'Soft Skills', icon: 'users', items: ['Communication', 'Problem Solving', 'Time Management', 'Critical & Analytical Thinking', 'Leadership', 'Adaptability', 'Teamwork'] },
+    { title: 'Soft Skills', icon: 'users', items: ['Communication', 'Problem Solving', 'Critical & Analytical Thinking', 'Teamwork'] },
   ];
 
   const skillIcons = {
     gauge: 'M12 3a9 9 0 1 0 6.36 15.36M12 12 8.5 15.5M12 12V7',
+    loop: 'M17 2.1l4 4-4 4|M3 12.2v-2a4 4 0 0 1 4-4h12.8|M7 21.9l-4-4 4-4|M21 11.8v2a4 4 0 0 1-4 4H4.2',
     chip: 'M7 7h10v10H7z|M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3',
     link: 'M8 8H6.5a4.5 4.5 0 1 0 0 9H8|M16 8h1.5a4.5 4.5 0 1 1 0 9H16|M8.5 12.5h7',
     code: 'M9.5 7 4 12.5 9.5 18|M14.5 7 20 12.5 14.5 18',
@@ -847,8 +851,8 @@
   @keyframes star-fall {
     0% { transform: translate(0, 0); opacity: 0; }
     8% { opacity: var(--peak-o); }
-    50% { opacity: var(--peak-o); }
-    75% { opacity: calc(var(--peak-o) * 0.5); }
+    25% { opacity: var(--peak-o); }
+    50% { opacity: calc(var(--peak-o) * 0.35); }
     100% { transform: translate(var(--dx), 100vh); opacity: 0; }
   }
 
