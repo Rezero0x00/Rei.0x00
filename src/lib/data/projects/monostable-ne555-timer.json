@@ -1,0 +1,131 @@
+{
+  "slug": "monostable-ne555-timer",
+  "title": "Monostable NE555 Timer",
+  "category": "Electronics / Circuit Design",
+  "date": "2026",
+  "role": "Electronics Engineer",
+  "excerpt": "Rangkaian monostable berbasis IC NE555 dengan trigger manual push button dan indikator LED, lebar pulsa keluaran ditentukan oleh pasangan resistor-kapasitor sesuai rumus T = 1.1RC.",
+  "tags": ["NE555", "Analog Electronics", "Monostable", "Circuit Design", "Timer IC"],
+  "coverImage": "",
+  "coverAspect": "4/3",
+
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Cara kerjanya bergantung pada pengisian kapasitor eksternal lewat resistor eksternal, yang statusnya dipantau lewat pin Threshold (THR) dan Discharge (DIS) yang disatukan. Saat pin Trigger (TRI) ditarik turun di bawah 1/3 VCC, flip-flop internal IC di-set sehingga output jadi HIGH dan kapasitor mulai diisi lewat resistor. Ketika tegangan kapasitor menyentuh 2/3 VCC (dideteksi lewat THR), flip-flop di-reset, output kembali LOW, dan kapasitor langsung dikosongkan lewat pin DIS."
+    },
+    {
+      "type": "formula",
+      "value": "T = 1.1 × R × C",
+      "note": "Lebar pulsa keluaran murni ditentukan oleh nilai resistor (R) dan kapasitor (C) pengisian."
+    },
+    {
+      "type": "paragraph",
+      "text": "Proyek ini dibuat untuk mempelajari langsung perilaku monostable 555 lewat rangkaian sederhana: push button sebagai trigger manual, LED sebagai indikator visual keluaran, dan kombinasi R-C yang menentukan berapa lama LED menyala setiap kali tombolnya ditekan."
+    },
+
+    { "type": "heading", "text": "Alat dan Bahan" },
+    {
+      "type": "table",
+      "columns": ["Komponen", "Jumlah", "Keterangan"],
+      "rows": [
+        ["IC NE555 (U2)", "1 unit", "IC timer utama, dioperasikan dalam mode monostable."],
+        ["Resistor R1 — 10kΩ", "1 unit", "Resistor pengisian kapasitor timing; bersama C1 menentukan lebar pulsa keluaran."],
+        ["Resistor R2 — 10kΩ", "1 unit", "Pull-up pada jalur trigger; menjaga pin TRI tetap HIGH saat tombol tidak ditekan."],
+        ["Resistor R3 — 330Ω", "1 unit", "Pembatas arus LED1 pada keluaran OUT."],
+        ["Kapasitor C1 — 1µF", "1 unit", "Kapasitor timing utama; diisi lewat R1, menentukan lebar pulsa bersama R1."],
+        ["Kapasitor C2 — 10µF", "1 unit", "Decoupling pada pin CON (control voltage) untuk meredam noise pada referensi internal IC."],
+        ["Kapasitor C3 — 100nF", "1 unit", "Bypass capacitor antara VCC dan GND, dipasang dekat IC."],
+        ["Kapasitor C4 — 100nF", "1 unit", "Filter noise pada jalur trigger; mencegah pemicu ganda akibat bouncing tombol."],
+        ["Push Button S1 (Key = A)", "1 unit", "Saklar trigger manual; menarik pin TRI ke GND saat ditekan."],
+        ["LED1", "1 unit", "Indikator visual; menyala selama pin OUT dalam kondisi HIGH."],
+        ["Sumber Tegangan VCC", "5.0V", "Catu daya rangkaian."]
+      ]
+    },
+
+    { "type": "heading", "text": "Desain Sistem" },
+    { "type": "heading", "text": "Prinsip Kerja", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Saat S1 ditekan, pin TRI ditarik ke GND sehingga di bawah ambang 1/3 VCC ini men-trigger flip-flop internal, OUT langsung HIGH dan menyalakan LED1. Bersamaan dengan itu, kapasitor timing (C1) mulai diisi lewat R1. Begitu tegangan C1 mencapai ambang 2/3 VCC (dideteksi lewat THR/DIS), flip-flop reset, OUT kembali LOW, LED1 padam, dan C1 langsung dikosongkan lewat pin DIS — rangkaian pun siap dipicu lagi."
+    },
+
+    { "type": "heading", "text": "Wiring", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Pin VCC (8) dan RST (4) sama-sama dihubungkan ke +5V — RST ditahan HIGH permanen supaya IC selalu dalam kondisi aktif (tidak pernah di-reset paksa). Pin GND (1) dihubungkan ke ground rangkaian."
+    },
+    {
+      "type": "paragraph",
+      "text": "Pin TRI (2) terhubung ke satu titik yang sama dengan R2 (menuju VCC), C4 (menuju GND), dan S1 (menuju GND). Dalam kondisi normal, TRI ditahan HIGH oleh R2 (pull-up). Saat S1 ditekan, TRI ditarik ke GND sehingga rangkaian ter-trigger. C4 berfungsi menyaring noise transien akibat bouncing kontak mekanis tombol, supaya trigger yang masuk lebih bersih."
+    },
+    {
+      "type": "paragraph",
+      "text": "Pin THR (6) dan DIS (7) disatukan pada satu titik yang sama, terhubung ke R1 (menuju VCC) dan C1 (menuju GND) — inilah pasangan RC timing yang menentukan lebar pulsa keluaran. Pin CON (5) dihubungkan ke C2 menuju GND sebagai decoupling tegangan referensi internal IC."
+    },
+    {
+      "type": "paragraph",
+      "text": "Pin OUT (3) mengendalikan LED1 yang diserikan dengan R3 menuju GND — LED menyala setiap kali OUT HIGH. Sementara itu C3 dipasang langsung antara VCC dan GND di dekat IC sebagai bypass capacitor, meredam riak tegangan supply saat IC beralih kondisi."
+    },
+    {
+      "type": "image",
+      "src": "/images/ne555/wiring.png",
+      "caption": "Skematik rangkaian monostable NE555",
+      "aspect": "3/2"
+    },
+
+    { "type": "heading", "text": "Perhitungan per Komponen", "level": 3 },
+    {
+      "type": "table",
+      "columns": ["Perhitungan", "Rumus & Substitusi", "Hasil"],
+      "rows": [
+        ["Lebar pulsa keluaran (T)", "T = 1.1 × R1 × C1 = 1.1 × 10kΩ × 1µF", "≈ 11 ms"],
+        ["Ambang trigger (1/3 VCC)", "Vtrig = VCC / 3 = 5.0V / 3", "≈ 1.67 V"],
+        ["Ambang threshold (2/3 VCC)", "Vthr = 2 × VCC / 3 = 2 × 5.0V / 3", "≈ 3.33 V"],
+        ["Konstanta waktu filter trigger", "τ = R2 × C4 = 10kΩ × 100nF", "1 ms"],
+        ["Arus LED1 (asumsi Vf ≈ 2V)", "I = (VCC − Vf) / R3 = (5.0V − 2V) / 330Ω", "≈ 9.1 mA"]
+      ],
+      "note": "Konstanta waktu filter trigger (τ = 1 ms) jauh lebih kecil dibanding lebar pulsa utama (11 ms), sehingga C4 cukup efektif meredam noise tanpa menunda trigger secara signifikan. Arus LED1 dihitung dengan asumsi tegangan maju (forward voltage) LED sekitar 2V — masih jauh di bawah batas aman arus LED standar (~20 mA)."
+    },
+
+    { "type": "heading", "text": "Data" },
+    {
+      "type": "paragraph",
+      "text": "Karena rangkaian ini masih dalam tahap desain/simulasi dan belum diuji langsung di hardware, belum ada data pengukuran fisik yang bisa ditampilkan. Sebagai gantinya, berikut hasil perhitungan teoritis yang jadi prediksi perilaku rangkaian saat dijalankan."
+    },
+    {
+      "type": "table",
+      "columns": ["Parameter", "Nilai Prediksi"],
+      "rows": [
+        ["Lebar pulsa LED menyala per trigger", "≈ 11 ms"],
+        ["Kondisi trigger", "Aktif saat S1 ditekan (TRI < 1.67V)"],
+        ["Kondisi reset otomatis", "Saat tegangan C1 mencapai 3.33V"],
+        ["Arus LED1 saat OUT HIGH", "≈ 9.1 mA"]
+      ]
+    },
+
+    { "type": "heading", "text": "Analisa" },
+    {
+      "type": "paragraph",
+      "text": "Dengan R1 = 10kΩ dan C1 = 1µF, lebar pulsa yang dihasilkan cuma sekitar 11 ms — jauh di bawah ambang persistence of vision mata manusia (umumnya di atas ±20–50 ms baru terlihat jelas sebagai nyala berdurasi). Artinya, LED1 kemungkinan besar cuma terlihat seperti kedipan sangat cepat, bukan nyala yang jelas durasinya. Kalau tujuannya untuk indikator visual yang gampang diamati, nilai C1 perlu diperbesar — misalnya ke 100µF akan menghasilkan pulsa ≈1,1 detik yang jauh lebih mudah dilihat."
+    },
+    {
+      "type": "paragraph",
+      "text": "Kombinasi R2 (pull-up) dan C4 (filter) pada jalur trigger sudah cukup baik untuk menahan noise dan bouncing dari tombol mekanis S1, dengan konstanta waktu filter (1 ms) yang jauh lebih kecil dari lebar pulsa utama sehingga tidak mengganggu proses trigger. C3 sebagai bypass capacitor juga membantu menjaga tegangan VCC tetap stabil saat IC berpindah kondisi output secara cepat."
+    },
+    {
+      "type": "paragraph",
+      "text": "Satu hal yang perlu diperhatikan: akurasi lebar pulsa aktual di hardware bisa meleset dari hasil perhitungan teoritis, karena toleransi komponen — terutama kapasitor elektrolit seperti C1 yang toleransinya bisa mencapai ±20%. Kalau presisi timing jadi prioritas, sebaiknya pakai kapasitor dengan toleransi lebih ketat (misalnya film capacitor) untuk C1."
+    },
+
+    { "type": "heading", "text": "Kesimpulan" },
+    {
+      "type": "paragraph",
+      "text": "Rangkaian monostable NE555 ini berhasil dirancang dengan trigger manual lewat push button dan indikator LED pada keluarannya. Lebar pulsa keluaran ditentukan oleh pasangan R1-C1 mengikuti rumus T = 1.1RC, dengan nilai saat ini menghasilkan pulsa sekitar 11 ms — cukup singkat sehingga lebih cocok untuk aplikasi pulsa cepat (misalnya trigger ke rangkaian lain) dibanding sebagai indikator visual yang mudah diamati mata."
+    },
+    {
+      "type": "paragraph",
+      "text": "Untuk pengembangan berikutnya, rangkaian ini bisa diuji langsung di hardware menggunakan osiloskop untuk memverifikasi lebar pulsa aktual dibanding hasil perhitungan, sekaligus mengevaluasi seberapa efektif C4 meredam bouncing tombol secara nyata. Kalau LED dimaksudkan sebagai indikator visual, nilai C1 juga bisa diperbesar supaya pulsanya lebih mudah diamati."
+    }
+  ]
+}

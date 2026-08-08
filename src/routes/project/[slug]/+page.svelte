@@ -10,6 +10,11 @@
   // Image / gallery blocks render a dashed placeholder box automatically
   // whenever `src` is empty — fill in the real path later and it swaps
   // to the actual <img> with no other changes needed.
+  //
+  // ASPECT RATIO: every image-like block accepts an optional `aspect`
+  // field, e.g. "aspect": "4/3" or "aspect": "1/1". If omitted it falls
+  // back to 16/9 for `image` blocks and 1/1 for images inside `gallery`.
+  // Same idea for the cover image via `project.coverAspect` (default 21/9).
   // ---------------------------------------------------------------------
   let { data } = $props();
   const project = data.project;
@@ -48,10 +53,12 @@
 
     {#if project.coverImage}
       <figure class="mb-14">
-        <div class="img-box" style="aspect-ratio: 21/9;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          <span class="img-tag">cover image</span>
-        </div>
+        <img
+          src={project.coverImage}
+          alt={project.title}
+          class="w-full rounded-lg border border-[var(--border)] object-cover"
+          style="aspect-ratio: {project.coverAspect ?? '21/9'};"
+        />
       </figure>
     {/if}
 
@@ -77,10 +84,11 @@
               <img
                 src={block.src}
                 alt={block.alt ?? block.caption ?? project.title}
-                class="w-full rounded-lg border border-[var(--border)] object-cover aspect-video"
+                class="w-full rounded-lg border border-[var(--border)] object-cover"
+                style="aspect-ratio: {block.aspect ?? '16/9'};"
               />
             {:else}
-              <div class="img-box">
+              <div class="img-box" style="aspect-ratio: {block.aspect ?? '16/9'};">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                 <span class="img-tag">image</span>
               </div>
@@ -101,10 +109,11 @@
                   <img
                     src={img.src}
                     alt={img.caption ?? project.title}
-                    class="w-full h-full rounded-lg border border-[var(--border)] object-cover aspect-square"
+                    class="w-full h-full rounded-lg border border-[var(--border)] object-cover"
+                    style="aspect-ratio: {img.aspect ?? '1/1'};"
                   />
                 {:else}
-                  <div class="img-box aspect-square">
+                  <div class="img-box" style="aspect-ratio: {img.aspect ?? '1/1'};">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                     <span class="img-tag">image</span>
                   </div>
@@ -248,10 +257,11 @@
     padding: 22px 24px;
   }
 
-  /* image placeholder box — used whenever block.src is empty */
+  /* image placeholder box — used whenever a src is empty.
+     aspect-ratio is set inline per-instance (see markup above),
+     so no fixed ratio is declared here. */
   .img-box {
     width: 100%;
-    aspect-ratio: 16 / 9;
     border: 1px dashed var(--border);
     border-radius: 10px;
     background:

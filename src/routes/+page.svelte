@@ -245,9 +245,9 @@
   // swap in your own projects here.
   const projects = [
     { id: 1, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'Embedded Firmware', 'Sensor Feedback'], slug: 'aero-pendulum' },
-    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['MQTT', 'Socket.io', 'Tailwind CSS v4'], slug: 'lab-environment-monitoring-dashboard' },
-    { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'smart-environmental-data-logger' },
-    { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'multi-component-electronic-tester' },
+    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['MQTT', 'Socket.io', 'Tailwind CSS v4'], slug: 'd' },
+    { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'lab-environment-monitoring' },
+    { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'monostable-ne555-timer' },
     { id: 5, title: 'Project 1', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },
     { id: 6, title: 'Project 2', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'IR Sensors', 'Arduino'], slug: 'line-following-robot' },
     { id: 7, title: 'Project 3', role: 'Embedded Systems Developer', category: 'Embedded', tags: ['ESP32', 'MQTT', 'WiFi'], slug: 'iot-weather-station' },
@@ -274,7 +274,9 @@
   ];
 
   // background stars for hero — each one falls slowly downward, fading
-  // out as it goes, then loops back and reappears from the top
+  // out as it goes, then loops back and reappears from the top.
+  // Confined to the hero section only (see markup: rendered inside
+  // #home with `absolute inset-0` instead of a viewport-wide `fixed` layer).
   function rand(min, max) {
     return Math.random() * (max - min) + min;
   }
@@ -393,21 +395,6 @@
 <canvas bind:this={trailCanvas} class="trail-canvas" aria-hidden="true"></canvas>
 <div bind:this={cursorDot} class="cursor-dot" aria-hidden="true"></div>
 
-<!-- stars: fixed to the viewport so they keep falling while the page scrolls -->
-<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-  {#each stars as s}
-    <span
-      class="absolute rounded-full bg-[var(--text)] star-fall"
-      style="
-        top:{s.startTop}%; left:{s.left}%; width:{s.size}px; height:{s.size}px;
-        --dx:{s.dx}px; --peak-o:{s.peakOpacity};
-        animation-duration: {s.duration}s;
-        animation-delay: {s.delay}s;
-      "
-    ></span>
-  {/each}
-</div>
-
 <div class="min-h-screen text-[var(--text)] font-sans selection:bg-[var(--accent)]/30 selection:text-[var(--text)] relative z-10">
   <!-- NAV -->
   <header class="mobile-menu-wrap fixed top-0 inset-x-0 z-40 border-b border-[var(--border)]/70 bg-[var(--bg)]/70 backdrop-blur">
@@ -505,6 +492,22 @@
 
   <!-- HOME / HERO -->
   <section id="home" class="relative overflow-hidden min-h-screen flex items-center pt-16">
+    <!-- stars: confined to the hero section only, falls behind the content
+         and gets clipped by this section's own overflow-hidden -->
+    <div class="absolute inset-0 pointer-events-none z-0">
+      {#each stars as s}
+        <span
+          class="absolute rounded-full bg-[var(--text)] star-fall"
+          style="
+            top:{s.startTop}%; left:{s.left}%; width:{s.size}px; height:{s.size}px;
+            --dx:{s.dx}px; --peak-o:{s.peakOpacity};
+            animation-duration: {s.duration}s;
+            animation-delay: {s.delay}s;
+          "
+        ></span>
+      {/each}
+    </div>
+
     <div class="relative max-w-6xl mx-auto px-6 w-full">
       <!-- wireframe icosphere — kept inside the same centered container as the
            text so it stays balanced instead of hanging off the screen edge -->

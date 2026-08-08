@@ -1,0 +1,181 @@
+{
+  "slug": "lab-environment-monitoring",
+  "title": "Real-Time Lab Environment Monitoring",
+  "category": "IoT / Instrumentation",
+  "date": "2026",
+  "role": "IoT & Instrumentation Engineer",
+  "excerpt": "Sistem pemantauan suhu, kelembaban, dan tekanan laboratorium secara real-time melalui web dashboard dan LabVIEW, menggantikan pengukuran manual dengan termometer ruangan.",
+  "tags": ["IoT", "MQTT", "ESP32", "LabVIEW", "Real-Time Monitoring"],
+  "coverImage": "/images/lab-environment-monitoring/Hardware.jpeg",
+
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Real-Time Lab Environment Monitoring adalah sistem pemantauan kondisi lingkungan laboratorium yang membaca suhu, kelembaban, dan tekanan udara secara kontinu, kemudian menampilkan hasilnya lewat web dashboard dan LabVIEW, menggantikan metode manual yang mengandalkan termometer ruangan."
+    },
+    {
+      "type": "paragraph",
+      "text": "Proyek ini menjawab kebutuhan sistem pemantauan otomatis dan berkesinambungan di Laboratorium Elektronika dan Instrumentasi, yang sebelumnya belum tersedia. Sistem dibangun dengan arsitektur IoT tiga lapis (device, communication, application) dan memiliki dua jalur monitoring paralel dari satu sumber data sensor: web dashboard melalui MQTT, dan LabVIEW melalui komunikasi serial."
+    },
+    {
+      "type": "paragraph",
+      "text": "Dua tolok ukur utama sistem ini adalah akurasi pembacaan sensor terhadap alat ukur referensi, dan kecepatan data mengalir dari sensor hingga tampil di layar."
+    },
+    {
+      "type": "formula",
+      "value": "Error = |Xref − Xsensor|",
+      "note": "Akurasi dihitung dari selisih mutlak antara nilai referensi dan nilai sensor."
+    },
+    {
+      "type": "formula",
+      "value": "Delay_total = Delay_MQTT + Delay_Socket.io",
+      "note": "Total delay end-to-end, dari broker MQTT hingga data terkirim ke browser."
+    },
+
+    { "type": "heading", "text": "Alat dan Bahan" },
+    {
+      "type": "table",
+      "columns": ["Komponen", "Jumlah", "Keterangan"],
+      "rows": [
+        ["ESP32 DevKit v1", "1 unit", "Mikrokontroler utama; membaca sensor via I2C, mengevaluasi alarm, mempublikasikan data ke MQTT via WiFi, dan mengirim data mentah ke LabVIEW lewat serial."],
+        ["Sensor AHT20", "1 unit", "Sensor suhu dan kelembaban digital I2C (0x38); akurasi ±0,3°C dan ±2% RH, beroperasi pada 2,0–5,5V."],
+        ["Sensor BMP280", "1 unit", "Sensor tekanan barometrik dan suhu digital I2C (0x77); resolusi tekanan 0,01 hPa pada rentang 300–1100 hPa."],
+        ["Buzzer", "1 unit", "Indikator alarm terhubung ke GPIO 2, aktif otomatis saat salah satu parameter lingkungan melewati ambang batas."],
+        ["Breadboard & Jumper Wire", "Secukupnya", "Media prototyping untuk menghubungkan ESP32 dengan sensor dan buzzer."],
+        ["Laptop (Node.js Server & LabVIEW)", "1 unit", "Menjalankan server backend Node.js/TypeScript sebagai penerima data MQTT dan penyedia web dashboard, sekaligus menjalankan LabVIEW."],
+        ["Access Point / WiFi Router", "1 unit", "Menyediakan jaringan lokal yang menghubungkan ESP32, broker MQTT, dan perangkat pengakses dashboard."]
+      ]
+    },
+
+    { "type": "heading", "text": "Desain Sistem" },
+    { "type": "heading", "text": "Arsitektur", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Sistem bekerja dalam tiga lapis: device layer (ESP32 membaca AHT20 dan BMP280 tiap 500 ms via I2C, mengevaluasi alarm, dan mengemas data menjadi JSON), communication layer (broker MQTT Mosquitto meneruskan data ke server Node.js), dan application layer (server memproses data dan mendorongnya real-time ke browser via Socket.io, serta menyimpan snapshot ke file JSON tiap satu jam). ESP32 juga mengirim data yang sama lewat serial USB ke LabVIEW, berjalan paralel dan independen dari jalur MQTT."
+    },
+    {
+      "type": "image",
+      "src": "/images/lab-environment-monitoring/data-flow.png",
+      "caption": "Data flow diagram sistem monitoring"
+    },
+    { "type": "heading", "text": "Wiring", "level": 3 },
+    {
+      "type": "paragraph",
+      "text": "Sensor AHT20 dan BMP280 terhubung ke ESP32 lewat bus I2C yang sama (shared bus). Pin VCC AHT20 ke 3,3V, GND ke GND, SDA ke GPIO 21, dan SCL ke GPIO 22 — pola yang sama berlaku untuk BMP280. Pin SDO BMP280 dihubungkan ke 3,3V agar alamat I2C-nya menjadi 0x77, berbeda dari alamat default AHT20 (0x38), sehingga keduanya dapat berbagi bus tanpa konflik alamat. Buzzer terhubung langsung sebagai indikator alarm: anoda (+) ke GPIO 2 dan katoda (−) ke GND, tanpa komponen tambahan karena GPIO 2 merupakan pin built-in ESP32 DevKit v1."
+    },
+    {
+      "type": "image",
+      "src": "/images/lab-environment-monitoring/wiring.png",
+      "caption": "Wiring diagram rangkaian pada breadboard"
+    },
+
+    { "type": "heading", "text": "Program Firmware ESP32" },
+    {
+      "type": "paragraph",
+      "text": "Firmware ESP32 mengulang tiga langkah tiap 500 milidetik: membaca suhu, kelembaban, dan tekanan dari kedua sensor; mengevaluasi ambang batas (suhu > 37,5°C, kelembaban > 85% RH, atau tekanan di luar rentang 980–1100 hPa) untuk mengaktifkan buzzer; lalu mengemas seluruh data menjadi JSON dan mempublikasikannya ke topik MQTT sensor/env, sekaligus mencetaknya ke serial agar dapat dibaca LabVIEW."
+    },
+
+    { "type": "heading", "text": "Dashboard" },
+    {
+      "type": "paragraph",
+      "text": "Web dashboard dapat diakses lewat browser dari perangkat mana pun dalam jaringan lokal yang sama, tanpa instalasi tambahan. Halaman utama menampilkan suhu, kelembaban, dan tekanan secara real-time yang diperbarui tiap 500 milidetik, dilengkapi tabel riwayat lima entri terakhir dan ekspor data ke format JSON atau CSV."
+    },
+    {
+      "type": "image",
+      "src": "/images/lab-environment-monitoring/dashboard.png",
+      "caption": "Tampilan web dashboard real-time",
+      "aspect": "2.1/1"
+    },
+
+    { "type": "heading", "text": "Antarmuka LabVIEW" },
+    {
+      "type": "paragraph",
+      "text": "Selain melalui web, data sensor dapat dipantau langsung lewat LabVIEW yang terhubung ke ESP32 via kabel USB. Program LabVIEW membaca data serial tiap 500 milidetik, memisahkan string berdasarkan koma menjadi empat nilai (suhu, kelembaban, tekanan, status), lalu menampilkannya sebagai indikator dan grafik."
+    },
+    {
+      "type": "image",
+      "src": "/images/lab-environment-monitoring/labview-1.png",
+      "caption": "Block diagram program LabVIEW — membaca data serial dan menampilkannya ke indikator & grafik"
+    },
+    {
+      "type": "image",
+      "src": "/images/lab-environment-monitoring/labview-2.png",
+      "caption": "Front panel LabVIEW menampilkan suhu, kelembaban, dan tekanan secara real-time",
+      "aspect": "4/3"
+    },
+
+    { "type": "heading", "text": "Data" },
+    {
+      "type": "paragraph",
+      "text": "Pengujian dilakukan pada empat aspek: akurasi sensor terhadap alat ukur referensi, delay komunikasi end-to-end, stabilitas pembacaan, dan fungsi alarm."
+    },
+    {
+      "type": "table",
+      "columns": ["No.", "Referensi (°C)", "AHT20 (°C)", "Selisih (°C)"],
+      "rows": [
+        ["1", "33.7", "34.0", "0.3"],
+        ["2", "33.7", "34.0", "0.3"],
+        ["3", "33.7", "34.0", "0.3"],
+        ["4", "33.7", "34.0", "0.3"],
+        ["5", "33.7", "34.0", "0.3"],
+        ["Rata-rata", "—", "—", "0.3"]
+      ],
+      "note": "Akurasi sensor suhu AHT20 terhadap termometer referensi."
+    },
+    {
+      "type": "table",
+      "columns": ["No.", "Referensi (%RH)", "AHT20 (%RH)", "Selisih (%RH)"],
+      "rows": [
+        ["1", "65.0", "66.6", "1.6"],
+        ["2", "65.2", "66.6", "1.4"],
+        ["3", "64.8", "66.5", "1.7"],
+        ["4", "65.1", "66.7", "1.6"],
+        ["5", "65.0", "66.6", "1.6"],
+        ["Rata-rata", "—", "—", "1.58"]
+      ],
+      "note": "Akurasi sensor kelembaban AHT20 terhadap sensor pembanding DHT22."
+    },
+    {
+      "type": "table",
+      "columns": ["No.", "Referensi (hPa)", "BMP280 (hPa)", "Selisih (hPa)"],
+      "rows": [
+        ["1", "1011.0", "1010.4", "0.6"],
+        ["2", "1011.0", "1010.6", "0.4"],
+        ["3", "1012.0", "1011.3", "0.7"],
+        ["4", "1012.0", "1011.5", "0.5"],
+        ["5", "1013.0", "1012.4", "0.6"],
+        ["Rata-rata", "—", "—", "0.56"]
+      ],
+      "note": "Akurasi sensor tekanan BMP280 terhadap data referensi eksternal."
+    },
+    {
+      "type": "table",
+      "columns": ["No.", "Delay MQTT (ms)", "Delay Socket.io (ms)", "Total (ms)"],
+      "rows": [
+        ["1", "18", "22", "40"],
+        ["2", "15", "19", "34"],
+        ["3", "21", "25", "46"],
+        ["4", "17", "21", "38"],
+        ["5", "19", "23", "42"],
+        ["Rata-rata", "18.0", "22.0", "40.0"]
+      ],
+      "note": "Delay komunikasi end-to-end dari broker MQTT hingga data tampil di browser."
+    },
+
+    { "type": "heading", "text": "Analisa" },
+    {
+      "type": "paragraph",
+      "text": "AHT20 menunjukkan rata-rata selisih suhu 0,3°C terhadap termometer referensi, masih dalam batas toleransi datasheet (±0,3°C). Selisih kelembaban 1,58% RH terhadap sensor pembanding DHT22 wajar mengingat toleransi masing-masing sensor (AHT20 ±2% RH, DHT22 ±2–5% RH). BMP280 menunjukkan selisih rata-rata 0,56 hPa terhadap data referensi eksternal, juga dalam batas spesifikasi (±1 hPa)."
+    },
+    {
+      "type": "paragraph",
+      "text": "Total delay komunikasi rata-rata 40 milidetik (18 ms MQTT dan 22 ms Socket.io), memadai untuk monitoring lingkungan yang tidak membutuhkan respons dalam skala milidetik kritikal. Fungsi alarm bekerja sesuai rencana: buzzer aktif kurang dari satu siklus loop (500 ms) setelah parameter melewati ambang batas, dan padam segera setelah kondisi kembali normal. Kualitas sinyal WiFi dan beban jaringan lokal menjadi faktor utama yang memengaruhi variasi delay MQTT."
+    },
+
+    { "type": "heading", "text": "Kesimpulan" },
+    {
+      "type": "paragraph",
+      "text": "Sistem Real-Time Lab Environment Monitoring berhasil dibangun sebagai solusi pemantauan otomatis lingkungan laboratorium, menggantikan metode manual sebelumnya. Akurasi sensor konsisten berada dalam batas toleransi datasheet, dan komunikasi data melalui MQTT dan Socket.io stabil dengan delay end-to-end rata-rata 40 milidetik. Web dashboard menyediakan monitoring live, logging per jam, ekspor JSON/CSV, dan REST API, sementara LabVIEW berfungsi sebagai jalur monitoring alternatif yang independen melalui serial. Pengembangan lanjutan yang relevan mencakup penyimpanan time-series, notifikasi via Telegram, dan penambahan sensor kualitas udara seperti MQ-135 dan BH1750."
+    }
+  ]
+}
