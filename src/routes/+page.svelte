@@ -689,7 +689,7 @@
     <div class="max-w-6xl mx-auto px-6">
       <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>04 — Project</p>
       <h2 class="font-display font-bold text-4xl mb-4" use:reveal={{ delay: 60 }}>Projects</h2>
-      <p class="text-[var(--text-dim)] max-w-xl mb-10" use:reveal={{ delay: 100 }}>A collection of things I've built — from monitoring dashboards to embedded control systems.</p>
+      <p class="text-[var(--text-dim)] max-w-xl mb-10" use:reveal={{ delay: 100 }}>A collection of things I've built along the way.</p>
 
       <div class="flex flex-wrap gap-2 mb-10" use:reveal={{ delay: 140 }}>
         {#each categories as cat}
