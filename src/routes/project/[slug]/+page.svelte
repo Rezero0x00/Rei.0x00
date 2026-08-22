@@ -15,6 +15,11 @@
   // field, e.g. "aspect": "4/3" or "aspect": "1/1". If omitted it falls
   // back to 16/9 for `image` blocks and 1/1 for images inside `gallery`.
   // Same idea for the cover image via `project.coverAspect` (default 21/9).
+  //
+  // PARAGRAPH WIDTH: paragraphs now stretch to the full article width
+  // (same as the images above them) instead of being capped at 66ch,
+  // and use justified alignment (`.paragraph-justify`) with `hyphens: auto`
+  // so the wider column doesn't produce uneven word-spacing gaps.
   // ---------------------------------------------------------------------
   let { data } = $props();
   const project = data.project;
@@ -76,7 +81,7 @@
           </svelte:element>
 
         {:else if block.type === 'paragraph'}
-          <p class="text-[var(--text-dim)] leading-[1.8] text-[16px] max-w-[66ch] -mt-6">{block.text}</p>
+          <p class="paragraph-justify text-[var(--text-dim)] leading-[1.8] text-[16px] -mt-6">{block.text}</p>
 
         {:else if block.type === 'image'}
           <figure>
@@ -246,6 +251,16 @@
     width: 40px;
     height: 1px;
     background: var(--accent);
+  }
+
+  /* body paragraphs: full width, justified, with hyphenation so the
+     wider column doesn't create uneven word-gaps like a narrow
+     justified column would */
+  .paragraph-justify {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
 
   /* formula / readout block */

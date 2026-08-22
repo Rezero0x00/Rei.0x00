@@ -177,7 +177,7 @@
   const stats = [
     { label: 'Semester', value: '5th' },
     { label: 'GPA', value: '3.79/4.00' },
-    { label: 'Major Projects', value: '2+' },
+    { label: 'Major Projects', value: '4+' },
     { label: 'Organizations', value: '2' },
   ];
 
@@ -399,7 +399,7 @@
   <!-- NAV -->
   <header class="mobile-menu-wrap fixed top-0 inset-x-0 z-40 border-b border-[var(--border)]/70 bg-[var(--bg)]/70 backdrop-blur">
     <nav class="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
-      <button class="cursor-hover flex items-center gap-2 font-display font-bold text-lg tracking-tight" onclick={() => scrollToId('home')}>
+      <button class="cursor-hover flex items-center gap-2 font-display font-bold text-base tracking-tight" onclick={() => scrollToId('home')}>
         <span class="relative flex h-2 w-2">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
@@ -407,7 +407,7 @@
         <span class="text-[var(--accent)]">Rei.0x00</span>
       </button>
       <div class="flex items-center gap-8">
-        <ul class="hidden sm:flex items-center gap-8 font-mono text-sm text-[var(--text-dim)]">
+        <ul class="hidden sm:flex items-center gap-8 font-mono text-xs text-[var(--text-dim)]">
           {#each navLinks as link}
             <li>
               <button class="cursor-hover nav-link hover:text-[var(--text)] transition-colors" onclick={() => scrollToId(link.id)}>
@@ -419,7 +419,7 @@
 
         <div class="theme-switcher relative">
           <button
-            class="cursor-hover flex items-center gap-2 px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-[var(--text)]/30 transition-colors text-sm font-mono text-[var(--text-dim)]"
+            class="cursor-hover flex items-center gap-2 px-3 py-1.5 rounded-md border border-[var(--border)] hover:border-[var(--text)]/30 transition-colors text-xs font-mono text-[var(--text-dim)]"
             onclick={() => (themeMenuOpen = !themeMenuOpen)}
           >
             {#if theme === 'dark'}
@@ -435,14 +435,14 @@
           {#if themeMenuOpen}
             <div class="absolute right-0 mt-2 w-32 rounded-md border border-[var(--border)] bg-[var(--surface)] py-1 shadow-lg">
               <button
-                class="cursor-hover w-full flex items-center gap-2 px-3 py-2 text-sm font-mono text-left hover:bg-[var(--bg)] transition-colors {theme === 'dark' ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}"
+                class="cursor-hover w-full flex items-center gap-2 px-3 py-2 text-xs font-mono text-left hover:bg-[var(--bg)] transition-colors {theme === 'dark' ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}"
                 onclick={() => applyTheme('dark')}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
                 Dark
               </button>
               <button
-                class="cursor-hover w-full flex items-center gap-2 px-3 py-2 text-sm font-mono text-left hover:bg-[var(--bg)] transition-colors {theme === 'light' ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}"
+                class="cursor-hover w-full flex items-center gap-2 px-3 py-2 text-xs font-mono text-left hover:bg-[var(--bg)] transition-colors {theme === 'light' ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}"
                 onclick={() => applyTheme('light')}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -471,7 +471,7 @@
 
     {#if mobileMenuOpen}
       <div class="sm:hidden border-t border-[var(--border)]/70 bg-[var(--bg)]">
-        <ul class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 font-mono text-sm text-[var(--text-dim)]">
+        <ul class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1 font-mono text-xs text-[var(--text-dim)]">
           {#each navLinks as link}
             <li>
               <button
@@ -523,31 +523,31 @@
       <!-- small floating outline circle, decorative -->
       <div class="absolute right-[22%] top-[10%] w-9 h-9 rounded-full border border-[var(--text-dim)]/40 pointer-events-none hidden md:block float-circle"></div>
 
-      <p class="font-mono text-sm text-[var(--accent)] mb-4 hero-in" style="animation-delay: 0ms">Hello world;</p>
-      <h1 class="font-display font-bold text-4xl sm:text-6xl md:text-7xl leading-[1.1] sm:leading-[1.05] mb-4 hero-in" style="animation-delay: 80ms">{profile.name}</h1>
-      <p class="text-xl text-[var(--text-dim)] mb-3 hero-in" style="animation-delay: 160ms">{profile.role}</p>
-      <p class="max-w-xl text-[var(--text-dim)]/90 mb-10 leading-relaxed hero-in" style="animation-delay: 240ms">{profile.tagline}</p>
+      <p class="font-mono text-xs text-[var(--accent)] mb-4 hero-in" style="animation-delay: 0ms">Hello world;</p>
+      <h1 class="font-display font-bold text-3xl sm:text-5xl md:text-6xl leading-[1.1] sm:leading-[1.05] mb-4 hero-in" style="animation-delay: 80ms">{profile.name}</h1>
+      <p class="text-lg text-[var(--text-dim)] mb-3 hero-in" style="animation-delay: 160ms">{profile.role}</p>
+      <p class="max-w-xl text-sm text-[var(--text-dim)]/90 mb-10 leading-relaxed hero-in" style="animation-delay: 240ms">{profile.tagline}</p>
 
       <div class="flex flex-wrap gap-3 mb-16 hero-in" style="animation-delay: 320ms">
-        <a href={profile.resumeUrl} class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--text)] text-[var(--bg)] transition-all duration-200 hover:opacity-85 hover:-translate-y-0.5 text-sm font-mono font-medium">
+        <a href={profile.resumeUrl} class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--text)] text-[var(--bg)] transition-all duration-200 hover:opacity-85 hover:-translate-y-0.5 text-xs font-mono font-medium">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
           Resume
         </a>
-        <a href={profile.githubUrl} target="_blank" rel="noreferrer" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-sm font-mono">
+        <a href={profile.githubUrl} target="_blank" rel="noreferrer" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-xs font-mono">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.78 10.78.57.1.78-.25.78-.55v-2.1c-3.17.69-3.84-1.34-3.84-1.34-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.14.08 1.75 1.17 1.75 1.17 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.53-.29-5.2-1.27-5.2-5.65 0-1.25.44-2.27 1.17-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.14 1.17a10.8 10.8 0 0 1 5.72 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.58.23 2.75.11 3.04.73.8 1.17 1.82 1.17 3.07 0 4.39-2.68 5.36-5.22 5.64.41.36.77 1.07.77 2.15v3.19c0 .3.21.66.79.55 4.51-1.51 7.77-5.77 7.77-10.79C23.02 5.24 18.27.5 12 .5z"/></svg>
           GitHub
         </a>
-        <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-sm font-mono">
+        <a href={profile.linkedinUrl} target="_blank" rel="noreferrer" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-xs font-mono">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.36 4.25 5.44zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56z"/></svg>
           LinkedIn
         </a>
-        <a href="mailto:{profile.email}" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-sm font-mono">
+        <a href="mailto:{profile.email}" class="cursor-hover flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--border)] transition-all duration-200 hover:border-[var(--text)]/40 hover:bg-[var(--surface)] hover:-translate-y-0.5 text-xs font-mono">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
           Email
         </a>
       </div>
 
-      <button class="cursor-hover flex items-center gap-2 font-mono text-xs tracking-widest text-[var(--text-dim)] hover:text-[var(--text)] transition-colors hero-in" style="animation-delay: 400ms" onclick={() => scrollToId('about')}>
+      <button class="cursor-hover flex items-center gap-2 font-mono text-[11px] tracking-widest text-[var(--text-dim)] hover:text-[var(--text)] transition-colors hero-in" style="animation-delay: 400ms" onclick={() => scrollToId('about')}>
         <svg class="animate-bounce" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         SCROLL DOWN
       </button>
@@ -565,14 +565,14 @@
           {:else}
             <div class="w-full h-full flex flex-col items-center justify-center gap-2 text-[var(--text-faint)]">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 15-4.5-4.5a2 2 0 0 0-2.8 0L5 19"/></svg>
-              <span class="font-mono text-[11px] text-center px-6 leading-relaxed">Set profile.photoUrl<br />to your own photo path</span>
+              <span class="font-mono text-[10px] text-center px-6 leading-relaxed">Set profile.photoUrl<br />to your own photo path</span>
             </div>
           {/if}
         </div>
 
         <div>
-          <p class="font-mono text-sm text-[var(--accent)] mb-4">01 — About</p>
-          <dl class="flex flex-col gap-3 font-mono text-xs text-[var(--text-dim)]">
+          <p class="font-mono text-xs text-[var(--accent)] mb-4">01 — About</p>
+          <dl class="flex flex-col gap-3 font-mono text-[11px] text-[var(--text-dim)]">
             <div class="flex items-center gap-2">
               <svg class="shrink-0 text-[var(--text-faint)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
               <span>Politeknik Caltex Riau</span>
@@ -590,22 +590,22 @@
       </div>
 
       <div use:reveal={{ delay: 100 }}>
-        <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-6">{about.heading}</h2>
+        <h2 class="font-display font-bold text-2xl sm:text-3xl leading-tight mb-6">{about.heading}</h2>
         {#each about.paragraphs as p}
-          <p class="text-[var(--text-dim)] leading-relaxed mb-5">{p}</p>
+          <p class="paragraph-justify text-sm text-[var(--text-dim)] leading-relaxed mb-5">{p}</p>
         {/each}
 
         <div class="flex flex-wrap gap-2 mt-8 mb-10">
           {#each about.focusAreas as area}
-            <span class="font-mono text-xs px-3 py-1.5 rounded-full border border-[var(--border)] text-[var(--text)]/90">{area}</span>
+            <span class="font-mono text-[11px] px-3 py-1.5 rounded-full border border-[var(--border)] text-[var(--text)]/90">{area}</span>
           {/each}
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {#each stats as s, i}
             <div class="rounded-lg border border-[var(--border)] px-4 py-4 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent)]/40" use:reveal={{ delay: 150 + i * 60 }}>
-              <p class="font-display font-bold text-2xl">{s.value}</p>
-              <p class="font-mono text-xs text-[var(--text-dim)] mt-1">{s.label}</p>
+              <p class="font-display font-bold text-xl">{s.value}</p>
+              <p class="font-mono text-[11px] text-[var(--text-dim)] mt-1">{s.label}</p>
             </div>
           {/each}
         </div>
@@ -616,8 +616,8 @@
   <!-- SKILLS -->
   <section id="skill" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
-      <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>02 — Skills</p>
-      <h2 class="font-display font-bold text-4xl mb-14" use:reveal={{ delay: 60 }}>Skills</h2>
+      <p class="font-mono text-xs text-[var(--accent)] mb-3" use:reveal>02 — Skills</p>
+      <h2 class="font-display font-bold text-3xl mb-14" use:reveal={{ delay: 60 }}>Skills</h2>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {#each skillGroups as group, i}
@@ -633,11 +633,11 @@
                   {/each}
                 </svg>
               </span>
-              <p class="font-mono text-xs text-[var(--text-dim)] tracking-widest leading-tight">{group.title.toUpperCase()}</p>
+              <p class="font-mono text-[11px] text-[var(--text-dim)] tracking-widest leading-tight">{group.title.toUpperCase()}</p>
             </div>
             <div class="flex flex-wrap gap-2">
               {#each group.items as item}
-                <span class="font-mono text-xs px-3 py-1.5 rounded-full bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/90 transition-colors hover:border-[var(--accent)]/50 hover:text-[var(--accent)]">{item}</span>
+                <span class="font-mono text-[11px] px-3 py-1.5 rounded-full bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/90 transition-colors hover:border-[var(--accent)]/50 hover:text-[var(--accent)]">{item}</span>
               {/each}
             </div>
           </div>
@@ -649,29 +649,29 @@
   <!-- EDUCATION -->
   <section id="education" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
-      <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>03 — Education</p>
-      <h2 class="font-display font-bold text-4xl mb-14" use:reveal={{ delay: 60 }}>Education</h2>
+      <p class="font-mono text-xs text-[var(--accent)] mb-3" use:reveal>03 — Education</p>
+      <h2 class="font-display font-bold text-3xl mb-14" use:reveal={{ delay: 60 }}>Education</h2>
 
       <div class="flex flex-col gap-14">
         {#each education as edu, i}
           <div class="grid md:grid-cols-[300px_1fr] gap-6 md:gap-14 border-t border-[var(--border)] pt-8" use:reveal={{ delay: i * 100 }}>
             <!-- date / location sidebar, mirrors the About photo column width -->
             <div class="flex flex-col gap-2">
-              <p class="font-mono text-xs text-[var(--text-faint)]">{String(i + 1).padStart(2, '0')}</p>
-              <p class="font-mono text-xs text-[var(--text-dim)] flex items-center gap-2">
+              <p class="font-mono text-[11px] text-[var(--text-faint)]">{String(i + 1).padStart(2, '0')}</p>
+              <p class="font-mono text-[11px] text-[var(--text-dim)] flex items-center gap-2">
                 <span class="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--text)]"></span>
                 {edu.date}
               </p>
-              <p class="font-mono text-xs text-[var(--text-faint)]">{edu.location}</p>
-              <p class="font-mono text-xs text-[var(--accent)] mt-1">{edu.score}</p>
+              <p class="font-mono text-[11px] text-[var(--text-faint)]">{edu.location}</p>
+              <p class="font-mono text-[11px] text-[var(--accent)] mt-1">{edu.score}</p>
             </div>
 
             <div>
-              <h3 class="font-display font-semibold text-xl mb-1">{edu.degree}</h3>
-              <p class="text-sm text-[var(--text-dim)] mb-5">{edu.school}</p>
+              <h3 class="font-display font-semibold text-lg mb-1">{edu.degree}</h3>
+              <p class="text-xs text-[var(--text-dim)] mb-5">{edu.school}</p>
               <ul class="flex flex-col gap-2">
                 {#each edu.points as pt}
-                  <li class="flex gap-2 text-sm text-[var(--text-dim)] leading-relaxed">
+                  <li class="flex gap-2 text-xs text-[var(--text-dim)] leading-relaxed">
                     <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--text-faint)]"></span>
                     {pt}
                   </li>
@@ -687,14 +687,14 @@
   <!-- PROJECT -->
   <section id="project" class="border-t border-[var(--border)]/70 py-20 sm:py-28">
     <div class="max-w-6xl mx-auto px-6">
-      <p class="font-mono text-sm text-[var(--accent)] mb-3" use:reveal>04 — Project</p>
-      <h2 class="font-display font-bold text-4xl mb-4" use:reveal={{ delay: 60 }}>Projects</h2>
-      <p class="text-[var(--text-dim)] max-w-xl mb-10" use:reveal={{ delay: 100 }}>A collection of things I've built along the way.</p>
+      <p class="font-mono text-xs text-[var(--accent)] mb-3" use:reveal>04 — Project</p>
+      <h2 class="font-display font-bold text-3xl mb-4" use:reveal={{ delay: 60 }}>Projects</h2>
+      <p class="text-sm text-[var(--text-dim)] max-w-xl mb-10" use:reveal={{ delay: 100 }}>A collection of things I've built along the way.</p>
 
       <div class="flex flex-wrap gap-2 mb-10" use:reveal={{ delay: 140 }}>
         {#each categories as cat}
           <button
-            class="cursor-hover font-mono text-xs px-4 py-2 rounded-full border transition-all duration-200
+            class="cursor-hover font-mono text-[11px] px-4 py-2 rounded-full border transition-all duration-200
               {activeCategory === cat ? 'bg-[var(--text)] text-[var(--bg)] border-[var(--text)]' : 'border-[var(--border)] text-[var(--text-dim)] hover:text-[var(--text)] hover:border-[var(--text)]/40'}"
             onclick={() => (activeCategory = cat)}
           >
@@ -711,15 +711,15 @@
             use:reveal={{ delay: (i % 6) * 80 }}
           >
             <div class="flex items-start justify-between mb-6">
-              <span class="font-mono text-xs text-[var(--text-faint)]">{String(project.id).padStart(2, '0')}</span>
+              <span class="font-mono text-[11px] text-[var(--text-faint)]">{String(project.id).padStart(2, '0')}</span>
               <svg class="text-[var(--text-dim)] transition-transform duration-300 group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M8 7h9v9"/></svg>
             </div>
             <div>
-              <h3 class="font-display font-semibold text-lg mb-1">{project.title}</h3>
-              <p class="text-sm text-[var(--text-dim)] mb-4">{project.role}</p>
+              <h3 class="font-display font-semibold text-base mb-1">{project.title}</h3>
+              <p class="text-xs text-[var(--text-dim)] mb-4">{project.role}</p>
               <div class="flex flex-wrap gap-2">
                 {#each project.tags as tag}
-                  <span class="font-mono text-[11px] px-2 py-1 rounded-full border border-[var(--border)] text-[var(--text-dim)]">{tag}</span>
+                  <span class="font-mono text-[10px] px-2 py-1 rounded-full border border-[var(--border)] text-[var(--text-dim)]">{tag}</span>
                 {/each}
               </div>
             </div>
@@ -730,7 +730,7 @@
       {#if filteredProjects.length > visibleCount}
         <div class="flex justify-center mt-10">
           <button
-            class="cursor-hover flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--border)] text-sm font-mono text-[var(--text-dim)] transition-all duration-200 hover:text-[var(--text)] hover:border-[var(--text)]/40 hover:-translate-y-0.5"
+            class="cursor-hover flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--border)] text-xs font-mono text-[var(--text-dim)] transition-all duration-200 hover:text-[var(--text)] hover:border-[var(--text)]/40 hover:-translate-y-0.5"
             onclick={() => (visibleCount = filteredProjects.length)}
           >
             Show More
@@ -744,8 +744,8 @@
   <!-- FOOTER -->
   <footer class="border-t border-[var(--border)]/70 py-10">
     <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="font-mono text-xs text-[var(--text-faint)]">© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
-      <div class="flex gap-5 font-mono text-xs text-[var(--text-dim)]">
+      <p class="font-mono text-[11px] text-[var(--text-faint)]">© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+      <div class="flex gap-5 font-mono text-[11px] text-[var(--text-dim)]">
         <a class="cursor-hover hover:text-[var(--text)] transition-colors" href={profile.githubUrl} target="_blank" rel="noreferrer">GitHub</a>
         <a class="cursor-hover hover:text-[var(--text)] transition-colors" href={profile.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a>
         <a class="cursor-hover hover:text-[var(--text)] transition-colors" href="mailto:{profile.email}">Email</a>
@@ -793,6 +793,15 @@
   }
   :global(.font-sans) {
     font-family: 'Inter', sans-serif;
+  }
+
+  /* body paragraphs: justified alignment with hyphenation so the wider
+     lines don't create uneven word-spacing gaps */
+  .paragraph-justify {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
 
   /* custom cursor (desktop / fine-pointer only) */
@@ -909,6 +918,6 @@
     .star-fall { animation: none !important; opacity: 0.3 !important; }
     .hero-in { animation: none !important; opacity: 1 !important; transform: none !important; }
     :global(.reveal) { opacity: 1 !important; transform: none !important; transition: none !important; }
-    :global(.animate-bounce), :global(.animate-ping) { animation: none !important; }
+    :global(.animate-bounce), :galobal(.animate-ping) { animation: none !important; }
   }
 </style>
