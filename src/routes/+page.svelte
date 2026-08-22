@@ -154,8 +154,8 @@
   // ---------------------------------------------------------------------
   const profile = {
     name: 'Muhammad Raihan Alifiandra',
-    role: 'Instrumentation, Control Systems & Electronics Engineer',
-    tagline: 'An Instrumentation & Control Systems student, engineering precise measurement and closed-loop automation from sensor to software.',
+    role: 'Electronics Engineering Technology Student',
+    tagline: 'An instrumentation, control systems, electronics, and electrical enthusiast, with a focus on turning raw sensor data into precise, automated action.',
     resumeUrl: '#',
     githubUrl: 'https://github.com/rezero0x00',
     linkedinUrl: 'https://www.linkedin.com/in/muhammad-raihan-alifiandra-2332b9417/',
@@ -166,10 +166,10 @@
   };
 
   const about = {
-    heading: 'An engineering student learning to bridge circuits and code.',
+    heading: 'An engineering student focused on instrumentation, control, and embedded systems.',
     paragraphs: [
-      "A 5th-semester Electronics Engineering student at Politeknik Caltex Riau, focused on instrumentation and control systems. Through coursework and personal projects, I'm learning to design closed-loop control systems, develop PID controllers, and calibrate sensors for precise measurement in industrial and laboratory settings.",
-      "On the embedded side, I'm building hands-on experience with Arduino and ESP32, exploring industrial protocols — Modbus RTU/RS-485, I2C, SPI, MQTT, and WiFi. I like connecting that data to software through LabVIEW, Python, or Node.js/TypeScript, and turning it into real-time monitoring and control projects as I go.",
+      "A 5th-semester Electronics Engineering student at Politeknik Caltex Riau, specializing in instrumentation and control systems. I design closed-loop control systems, develop PID and fuzzy logic controllers, and calibrate sensors to ensure precise measurement in industrial and laboratory environments.",
+      "I implement these systems on Arduino and ESP32, utilizing industrial communication protocols such as Modbus RTU/RS-485 and MQTT for reliable data acquisition and control, and integrate the resulting data into real-time monitoring platforms using LabVIEW, Python, and Node.js/TypeScript.",
     ],
     focusAreas: ['Instrumentation', 'Control Systems', 'Embedded Systems', 'IoT Protocols'],
   };
@@ -177,7 +177,7 @@
   const stats = [
     { label: 'Semester', value: '5th' },
     { label: 'GPA', value: '3.79/4.00' },
-    { label: 'Major Projects', value: '4+' },
+    { label: 'Major Projects', value: '2+' },
     { label: 'Organizations', value: '2' },
   ];
 
@@ -189,11 +189,11 @@
   // ---------------------------------------------------------------------
   const skillGroups = [
     { title: 'Instrumentation', icon: 'gauge', items: ['Sensor Calibration', 'Signal Conditioning', 'Data Acquisition'] },
-    { title: 'Control', icon: 'loop', items: ['PID Control', 'Closed-Loop Feedback', 'Control System Design'] },
-    { title: 'Embedded Systems', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensor Integration', 'Actuator Control', 'UART', 'I2C', 'SPI', 'Modbus RTU/RS-485', 'MQTT'] },
-    { title: 'Programming', icon: 'code', items: ['C/C++', 'Python', 'TypeScript'] },
+    { title: 'Control', icon: 'loop', items: ['PID Control','Fuzzy Logic', 'Closed-Loop Feedback', 'Control System Design'] },
+    { title: 'Embedded Systems', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'UART', 'I2C', 'SPI', 'Modbus RTU/RS-485', 'MQTT'] },
+    { title: 'Programming', icon: 'code', items: ['C/C++', 'Python', 'TypeScript', 'MySQL', 'SQLite'] },
     { title: 'Tools & Software', icon: 'wrench', items: ['LabVIEW', 'Multisim', 'MATLAB', 'Arduino IDE', 'Visual Studio Code', 'GitHub'] },
-    { title: 'Soft Skills', icon: 'users', items: ['Communication', 'Problem Solving', 'Critical & Analytical Thinking', 'Teamwork'] },
+    { title: 'Soft Skills', icon: 'users', items: ['Leadership', 'Communication', 'Critical & Analytical Thinking', 'Teamwork'] },
   ];
 
   const skillIcons = {
@@ -218,9 +218,9 @@
       score: 'GPA 3.79 / 4.00',
       points: [
         'Coursework: Instrumentation, PLC, Control Systems, Electrical Circuit Analysis',
-        'Research Assistant — IoMT & AI-Based Arrhythmia Monitoring System (data collection assistant)',
+        'Research Assistant of IoMT & AI-Based Arrhythmia Monitoring System (data collection assistant)',
         'PKM — Digital Prayer Schedule Display System on Raspberry Pi, Masjid Baitul Maqdis (Electronics Technician)',
-        'Robotics Training Instructor — P5 Program, SMAN 17 Pekanbaru',
+        'Robotics Training Instructor for P5 Program at SMAN 17 Pekanbaru',
       ],
     },
     {
@@ -245,7 +245,7 @@
   // swap in your own projects here.
   const projects = [
     { id: 1, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'Embedded Firmware', 'Sensor Feedback'], slug: 'aero-pendulum' },
-    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['MQTT', 'Socket.io', 'Tailwind CSS v4'], slug: 'd' },
+    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['Analog', 'Signal Conditioning', 'Amplifier'], slug: 'd' },
     { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'lab-environment-monitoring' },
     { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'monostable-ne555-timer' },
     { id: 5, title: 'Project 1', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },
