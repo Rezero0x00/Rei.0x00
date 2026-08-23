@@ -1,9 +1,6 @@
 <script>
   import { onMount } from 'svelte';
 
-  // ---------------------------------------------------------------------
-  // THEME: dark / light toggle (dropdown in navbar)
-  // ---------------------------------------------------------------------
   let theme = $state('dark');
   let themeMenuOpen = $state(false);
   let mobileMenuOpen = $state(false);
@@ -156,9 +153,9 @@
     name: 'Muhammad Raihan Alifiandra',
     role: 'Electronics Engineering Technology Student',
     tagline: 'An instrumentation, control systems, electronics, and electrical enthusiast, with a focus on turning raw sensor data into precise, automated action.',
-    resumeUrl: '#',
+    resumeUrl: '/cv.pdf',
     githubUrl: 'https://github.com/rezero0x00',
-    linkedinUrl: 'https://www.linkedin.com/in/muhammad-raihan-alifiandra-2332b9417/',
+    linkedinUrl: 'https://www.linkedin.com/in/muhammad-raihan-alifiandra-ba65b0430/?isSelfProfile=true',
     email: 'raihan24trse@mahasiswa.pcr.ac.id',
     phone: '087741174222',
     // replace with your own photo path (square, ideally 1:1), e.g. '/images/profile.jpg'
@@ -221,6 +218,7 @@
         'Research Assistant of IoMT & AI-Based Arrhythmia Monitoring System (data collection assistant)',
         'PKM — Digital Prayer Schedule Display System on Raspberry Pi, Masjid Baitul Maqdis (Electronics Technician)',
         'Robotics Training Instructor for P5 Program at SMAN 17 Pekanbaru',
+        '	Head of Technology Research Division, Electronics Engineering Student Association',
       ],
     },
     {
