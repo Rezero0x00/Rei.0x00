@@ -242,8 +242,8 @@
   // NOTE: the first 4 are from the resume; the rest are placeholder examples —
   // swap in your own projects here.
   const projects = [
-    { id: 1, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'Embedded Firmware', 'Sensor Feedback'], slug: 'aero-pendulum' },
-    { id: 2, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['Analog', 'Signal Conditioning', 'Amplifier'], slug: 'd' },
+    { id: 1, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['Analog', 'Signal Conditioning', 'Amplifier'], slug: 'multistage-signal-conditioning' },
+    { id: 2, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID ', 'Embedded ', 'Closed Loop'], slug: 'aero-pendulum' },
     { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'lab-environment-monitoring' },
     { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'monostable-ne555-timer' },
     { id: 5, title: 'Project 1', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },

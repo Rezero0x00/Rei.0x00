@@ -4,8 +4,8 @@
   //
   // Data-driven via `data.project` (see the sibling +page.js loader).
   // Body is a flexible `project.blocks` array, one {#if} branch per type.
-  // Supported block types: heading, paragraph, image, gallery, formula,
-  // table, quote.
+  // Supported block types: heading, paragraph, link, image, gallery,
+  // formula, table, quote.
   //
   // Image / gallery blocks render a dashed placeholder box automatically
   // whenever `src` is empty — fill in the real path later and it swaps
@@ -20,6 +20,9 @@
   // (same as the images above them) instead of being capped at 66ch,
   // and use justified alignment (`.paragraph-justify`) with `hyphens: auto`
   // so the wider column doesn't produce uneven word-spacing gaps.
+  //
+  // LINK BLOCK: { "type": "link", "text": "Lihat kode di GitHub", "url": "https://..." }
+  // Renders as a clickable pill/card that opens in a new tab.
   // ---------------------------------------------------------------------
   let { data } = $props();
   const project = data.project;
@@ -82,6 +85,18 @@
 
         {:else if block.type === 'paragraph'}
           <p class="paragraph-justify text-[var(--text-dim)] leading-[1.8] text-[16px] -mt-6">{block.text}</p>
+
+        {:else if block.type === 'link'}
+          <a
+            href={block.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-card -mt-6"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span>{block.text}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="link-arrow"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+          </a>
 
         {:else if block.type === 'image'}
           <figure>
@@ -261,6 +276,31 @@
     text-justify: inter-word;
     hyphens: auto;
     -webkit-hyphens: auto;
+  }
+
+  /* clickable link block — small pill/card, opens in new tab */
+  .link-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.15s ease, background 0.15s ease;
+    width: fit-content;
+    text-decoration: none;
+  }
+  .link-card:hover {
+    border-color: var(--accent-dim);
+    background: var(--surface-2);
+  }
+  .link-arrow {
+    color: var(--text-faint);
+    margin-left: 2px;
   }
 
   /* formula / readout block */

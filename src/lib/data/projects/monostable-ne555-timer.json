@@ -88,21 +88,7 @@
       "note": "Konstanta waktu filter trigger (τ = 1 ms) jauh lebih kecil dibanding lebar pulsa utama (11 ms), sehingga C4 cukup efektif meredam noise tanpa menunda trigger secara signifikan. Arus LED1 dihitung dengan asumsi tegangan maju (forward voltage) LED sekitar 2V — masih jauh di bawah batas aman arus LED standar (~20 mA)."
     },
 
-    { "type": "heading", "text": "Data" },
-    {
-      "type": "paragraph",
-      "text": "Karena rangkaian ini masih dalam tahap desain/simulasi dan belum diuji langsung di hardware, belum ada data pengukuran fisik yang bisa ditampilkan. Sebagai gantinya, berikut hasil perhitungan teoritis yang jadi prediksi perilaku rangkaian saat dijalankan."
-    },
-    {
-      "type": "table",
-      "columns": ["Parameter", "Nilai Prediksi"],
-      "rows": [
-        ["Lebar pulsa LED menyala per trigger", "≈ 11 ms"],
-        ["Kondisi trigger", "Aktif saat S1 ditekan (TRI < 1.67V)"],
-        ["Kondisi reset otomatis", "Saat tegangan C1 mencapai 3.33V"],
-        ["Arus LED1 saat OUT HIGH", "≈ 9.1 mA"]
-      ]
-    },
+  
 
     { "type": "heading", "text": "Analisa" },
     {

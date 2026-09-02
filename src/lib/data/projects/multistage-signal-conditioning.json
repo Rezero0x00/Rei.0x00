@@ -1,0 +1,118 @@
+{
+  "slug": "multistage-signal-conditioning",
+  "title": "Multistage Signal Conditioning",
+  "category": "Instrumentation / Analog Electronics",
+  "date": "2026",
+  "role": "Instrumentation Engineer",
+  "excerpt": "Rangkaian pengkondisi sinyal 4-stage yang mengubah keluaran sensor suhu LM35 menjadi sinyal bersih, terskala, dan siap dibaca ADC Arduino Nano, dilengkapi referensi tegangan presisi TL431.",
+  "tags": ["Signal Conditioning", "Analog Design", "TL431", "Arduino Nano"],
+  "coverImage": "/images/multistage-signal-conditioning/image.jpeg",
+
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Multistage Signal Conditioning adalah rangkaian pengkondisi sinyal bertingkat (4 stage) yang mengubah keluaran sensor suhu LM35 (10mV/°C), sinyal lemah dan rentan noise menjadi sinyal bersih, terskala, dan siap dibaca oleh ADC Arduino Nano."
+    },
+    {
+      "type": "paragraph",
+      "text": "Proyek ini mempelajari prinsip dasar signal conditioning untuk sensor analog: penguatan, penyaringan, pembatasan level tegangan, dan penyangga impedansi, dilengkapi referensi tegangan presisi TL431 sebagai AREF eksternal untuk meningkatkan resolusi ADC, serta OLED sebagai penampil hasil pembacaan suhu real-time."
+    },
+    {
+      "type": "formula",
+      "value": "S = 10mV/°C × Gain(11) × Rasio_attenuator(0,2041) ≈ 22,4 mV/°C",
+      "note": "Sensitivitas total sistem dari suhu ke tegangan ADC."
+    },
+    {
+      "type": "formula",
+      "value": "Resolusi_suhu = (AREF/1024) / S ≈ 0,109°C/step",
+      "note": "Resolusi suhu efektif dengan AREF 2,5V pada ADC 10-bit."
+    },
+
+    { "type": "heading", "text": "Alat dan Bahan" },
+    {
+      "type": "table",
+      "columns": ["Komponen", "Jumlah"],
+      "rows": [
+        ["Arduino Nano", "1 unit"],
+        ["LM35", "1 unit"],
+        ["Op-amp LM358 (dual op-amp)", "2 unit"],
+        ["IC Referensi TL431", "1 unit"],
+        ["IC Regulator L7805", "1 unit"],
+        ["OLED I2C (SSD1306 128x64)", "1 unit"],
+        ["Resistor 100 kΩ", "4 unit"],
+        ["Resistor 10 kΩ", "2 unit"],
+        ["Resistor 390 kΩ", "1 unit"],
+        ["Kapasitor 100 µF", "2 unit"],
+        ["Diode 1N4007", "1 unit"]
+      ]
+    },
+
+    { "type": "heading", "text": "4 Proses Utama (Signal Conditioning)" },
+    {
+      "type": "paragraph",
+      "text": "Signal conditioning pada rangkaian ini terdiri dari 4 tahap berurutan. Stage 1 adalah amplifier non-inverting berbasis LM358 (IC1-A) dengan gain 11x (R=10kΩ, Rf=100kΩ), berfungsi memperbesar sinyal lemah LM35 (10mV/°C) menjadi 110mV/°C. Stage 2 adalah filter Sallen-Key low-pass berbasis LM358 (IC1-B) dengan R=100kΩ (x2) dan C=100nF (x2), fc≈15,9Hz, berfungsi membuang noise frekuensi tinggi dari sinyal yang sudah diperkuat. Stage 3 adalah attenuator berupa voltage divider (R1=390kΩ, R2=100kΩ) yang menurunkan level sinyal agar tetap berada di bawah batas AREF (2,5V) sehingga tidak clipping di ADC. Stage 4 adalah voltage follower berbasis LM358 (IC2-A, gain 1x) yang berfungsi sebagai buffer, menurunkan impedansi keluaran attenuator (Thevenin ≈79,6kΩ) menjadi impedansi rendah agar pembacaan ADC lebih akurat dan stabil."
+    },
+
+    { "type": "heading", "text": "Diagram Block" },
+    {
+      "type": "paragraph",
+      "text": "Sinyal dari LM35 mengalir berurutan lewat 4 stage signal conditioning sebelum masuk ke ADC Arduino Nano: amplifier (IC1-A, gain 11x) → filter Sallen-Key (IC1-B) → attenuator (voltage divider) → voltage follower (IC2-A, buffer). TL431 menyediakan referensi 2,5V ke pin AREF, dan hasil pembacaan suhu ditampilkan di OLED lewat I2C."
+    },
+    {
+      "type": "image",
+      "src": "/images/multistage-signal-conditioning/diagram.png",
+      "caption": "Diagram block sistem signal conditioning",
+      "aspect": "2.8/3"
+    },
+
+    { "type": "heading", "text": "Wiring" },
+    {
+      "type": "image",
+      "src": "/images/multistage-signal-conditioning/schematic.png",
+      "caption": "Wiring diagram rangkaian",
+      "aspect": "16/9"
+    },
+
+    { "type": "heading", "text": "Referensi Tegangan (TL431) dan Protection" },
+    {
+      "type": "paragraph",
+      "text": "LM35 menghasilkan 10mV/°C, sedangkan ADC 10-bit dengan AREF default 5V hanya beresolusi ~4,88mV/step (~0,5°C/step), sehingga perubahan suhu kecil bisa tidak terdeteksi. Karena itu, TL431 dipakai sebagai AREF eksternal 2,5V (REF ke katoda, resistor bias 10kΩ dari V_raw), menurunkan resolusi ADC menjadi 2,44mV/step — dua kali lebih presisi dibanding Vcc default yang rentan noise. Sebagai proteksi, diode 1N4007 dipasang seri di jalur supply 12V untuk melindungi rangkaian dari reverse polarity."
+    },
+
+    { "type": "heading", "text": "Analisa" },
+    {
+      "type": "paragraph",
+      "text": "Amplifier non-inverting pada stage 1 menggunakan resistor gain R1=10kΩ dan resistor feedback Rf=100kΩ, sehingga Gain = 1 + (Rf/R1) = 11x. Pada suhu maksimum 100°C, output LM35 sebesar 1V diperkuat menjadi 11V. Sinyal ini melewati filter Sallen-Key unity-gain pada stage 2 dengan R1=R2=100kΩ dan C1=C2=100nF, menghasilkan fc = 1/(2π×R×C) ≈ 15,9 Hz — cukup rendah untuk meredam noise frekuensi tinggi tanpa mengganggu respons suhu LM35 yang lambat berubah."
+    },
+    {
+      "type": "paragraph",
+      "text": "Stage 3 berupa voltage divider (R1=390kΩ, R2=100kΩ) menurunkan sinyal 11V menjadi Vout = 11V × (100kΩ/490kΩ) ≈ 2,24V, berada di bawah AREF 2,5V sehingga tidak terjadi clipping di ADC. Stage 4, voltage follower (gain 1x), tidak mengubah level tegangan namun menurunkan impedansi keluaran attenuator (≈79,6kΩ) menjadi impedansi rendah agar pembacaan ADC lebih stabil dan akurat."
+    },
+    {
+      "type": "paragraph",
+      "text": "Nilai ADC dikonversi kembali menjadi suhu aktual di Arduino Nano lewat formula T(°C) = (ADC × 2,5V) / (1024 × 11 × 0,2041 × 0,01), dengan penyesuaian pada firmware: AREF yang dipakai adalah nilai hasil ukur multimeter langsung (VREF=2,509V), bukan nilai ideal 2,5V, dan pembagi resolusi ADC memakai 1023 karena rentang nilai ADC 10-bit adalah 0–1023. Pemakaian VREF hasil ukur membuat konversi lebih akurat karena turut mengoreksi toleransi komponen TL431 dan rangkaian bias resistornya."
+    },
+    {
+      "type": "table",
+      "columns": ["No", "Suhu Aktual (°C)", "ADC Terbaca", "Suhu Hasil Perhitungan (°C)", "Error (°C)", "Error (%)"],
+      "rows": [
+        ["1", "20,0", "187", "20,34", "0,34", "1,68"],
+        ["2", "40,0", "374", "40,67", "0,67", "1,68"],
+        ["3", "60,0", "561", "61,01", "1,01", "1,68"],
+        ["4", "80,0", "747", "81,23", "1,23", "1,54"],
+        ["5", "100,0", "934", "101,57", "1,57", "1,57"]
+      ],
+      "note": "Validasi pembacaan suhu terhadap termometer referensi pada 5 titik suhu."
+    },
+    {
+      "type": "paragraph",
+      "text": "Dari data pengujian di atas, suhu hasil perhitungan mendekati suhu aktual dengan error berkisar 0,34°C hingga 1,57°C (setara 1,54%–1,68%), masih berada dalam rentang estimasi error teoretis (0,3°C–1,6°C). Selisih ini wajar terjadi akibat toleransi resistor aktual, offset op-amp LM358, serta akurasi sensor LM35, sehingga hasil pengujian ini mengonfirmasi validitas perhitungan teoretis rangkaian."
+    },
+
+    { "type": "heading", "text": "Kesimpulan" },
+    {
+      "type": "paragraph",
+      "text": "Multistage Signal Conditioning berhasil mengubah sinyal LM35 yang lemah (10mV/°C) menjadi sinyal bersih, terskala, dan berimpedansi rendah lewat 4 stage: amplifier (gain 11x), filter Sallen-Key (fc≈15,9Hz), attenuator (rasio 0,2041), dan voltage follower, dengan referensi TL431 2,5V sebagai AREF eksternal. Sistem ini meningkatkan resolusi efektif dari ~0,5°C/step (LM35 langsung ke ADC dengan AREF 5V) menjadi ~0,109°C/step, dengan estimasi error total 0,3°C–1,6°C pada rentang 0–100°C dan akurasi relatif sekitar 97,8%–98,4%, tervalidasi lewat pengujian hardware pada 5 titik suhu."
+    }
+  ]
+}

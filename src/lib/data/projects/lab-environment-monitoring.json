@@ -4,8 +4,8 @@
   "category": "IoT / Instrumentation",
   "date": "2026",
   "role": "IoT & Instrumentation Engineer",
-  "excerpt": "Sistem pemantauan suhu, kelembaban, dan tekanan laboratorium secara real-time melalui web dashboard dan LabVIEW, menggantikan pengukuran manual dengan termometer ruangan.",
-  "tags": ["IoT", "MQTT", "ESP32", "LabVIEW", "Real-Time Monitoring"],
+  "excerpt": "Sistem pemantauan suhu, kelembaban, dan tekanan udara pada laboratorium secara real-time melalui web dashboard dan LabVIEW, menggantikan pengukuran manual dengan termometer ruangan.",
+  "tags": [ "LabVIEW", "Real-Time Monitoring", "ESP32", "IoT" ],
   "coverImage": "/images/lab-environment-monitoring/Hardware.jpeg",
 
   "blocks": [
@@ -73,6 +73,11 @@
     {
       "type": "paragraph",
       "text": "Firmware ESP32 mengulang tiga langkah tiap 500 milidetik: membaca suhu, kelembaban, dan tekanan dari kedua sensor; mengevaluasi ambang batas (suhu > 37,5°C, kelembaban > 85% RH, atau tekanan di luar rentang 980–1100 hPa) untuk mengaktifkan buzzer; lalu mengemas seluruh data menjadi JSON dan mempublikasikannya ke topik MQTT sensor/env, sekaligus mencetaknya ke serial agar dapat dibaca LabVIEW."
+    },
+    {
+      "type": "link",
+      "text": "Lihat kode lengkap di GitHub",
+      "url": "https://github.com/Rezero0x00/Lab-Environtmen-Monitoring"
     },
 
     { "type": "heading", "text": "Dashboard" },
