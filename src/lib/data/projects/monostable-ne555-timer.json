@@ -6,8 +6,7 @@
   "role": "Electronics Engineer",
   "excerpt": "Rangkaian monostable berbasis IC NE555 dengan trigger manual push button dan indikator LED, lebar pulsa keluaran ditentukan oleh pasangan resistor-kapasitor sesuai rumus T = 1.1RC.",
   "tags": ["NE555", "Analog Electronics", "Monostable", "Circuit Design", "Timer IC"],
-  "coverImage": "",
-  "coverAspect": "4/3",
+   "coverImage": "/images/ne555/NE555.jpeg",
 
   "blocks": [
     {
