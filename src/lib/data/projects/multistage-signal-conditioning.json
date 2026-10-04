@@ -6,7 +6,8 @@
   "role": "Instrumentation Engineer",
   "excerpt": "Rangkaian pengkondisi sinyal 4-stage yang mengubah keluaran sensor suhu LM35 menjadi sinyal bersih, terskala, dan siap dibaca ADC Arduino Nano, dilengkapi referensi tegangan presisi TL431.",
   "tags": ["Signal Conditioning", "Analog Design", "TL431", "Arduino Nano"],
-  "coverImage": "/images/multistage-signal-conditioning/image.jpeg",
+  "coverImage": "/images/multistage-signal-conditioning/image2.png",
+  "coverAspect": "16/9",
 
   "blocks": [
     {
@@ -72,6 +73,13 @@
       "caption": "Wiring diagram rangkaian",
       "aspect": "16/9"
     },
+     {
+      "type": "image",
+      "src": "/images/multistage-signal-conditioning/image1.png",
+      "caption": "Hasil Solder",
+      "aspect": "16/9"
+    },
+
 
     { "type": "heading", "text": "Referensi Tegangan (TL431) dan Protection" },
     {
@@ -91,6 +99,12 @@
     {
       "type": "paragraph",
       "text": "Nilai ADC dikonversi kembali menjadi suhu aktual di Arduino Nano lewat formula T(°C) = (ADC × 2,5V) / (1024 × 11 × 0,2041 × 0,01), dengan penyesuaian pada firmware: AREF yang dipakai adalah nilai hasil ukur multimeter langsung (VREF=2,509V), bukan nilai ideal 2,5V, dan pembagi resolusi ADC memakai 1023 karena rentang nilai ADC 10-bit adalah 0–1023. Pemakaian VREF hasil ukur membuat konversi lebih akurat karena turut mengoreksi toleransi komponen TL431 dan rangkaian bias resistornya."
+    },
+     {
+      "type": "image",
+      "src": "/images/multistage-signal-conditioning/image3.png",
+      "caption": "Hasil Testing",
+      "aspect": "16/9"
     },
     {
       "type": "table",
