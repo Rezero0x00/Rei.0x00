@@ -6,7 +6,7 @@
   "role": "Control Systems Engineer",
   "excerpt": "Lengan pendulum yang distabilkan dengan gaya dorong propeller, dikendalikan real-time menggunakan PID berbasis MATLAB Simulink.",
   "tags": ["PID Control", "Underactuated System", "MATLAB Simulink", "Arduino"],
-  "coverImage": "/images/aero-pendulum/pendulum.jpeg",
+
 
   "blocks": [
     {
@@ -64,6 +64,8 @@
       "type": "paragraph",
       "text": "Sistem bekerja dalam skema closed-loop: sinyal error e(t), yaitu selisih sudut referensi dan sudut aktual, diproses kontroler PID untuk menghasilkan sinyal kendali u(t) yang mengatur motor."
     },
+    
+   
     {
       "type": "image",
       "src": "/images/aero-pendulum/block-diagram.png",
