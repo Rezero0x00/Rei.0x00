@@ -165,8 +165,8 @@
   const about = {
     heading: 'An engineering student focused on instrumentation, control, and embedded systems.',
     paragraphs: [
-      "A 5th-semester Electronics Engineering student at Politeknik Caltex Riau, specializing in instrumentation and control systems. I design closed-loop control systems, develop PID and fuzzy logic controllers, and calibrate sensors to ensure precise measurement in industrial and laboratory environments.",
-      "I implement these systems on Arduino and ESP32, utilizing industrial communication protocols such as Modbus RTU/RS-485 and MQTT for reliable data acquisition and control, and integrate the resulting data into real-time monitoring platforms using LabVIEW, Python, and Node.js/TypeScript.",
+      "A 5th-semester Electronics Engineering Technology student at Politeknik Caltex Riau, specializing in instrumentation and control systems. I design closed-loop PID control systems, perform sensor calibration, and build signal conditioning circuits on Arduino and ESP32, with LabVIEW and Python for data acquisition and monitoring. I also have foundational experience in PLC programming (SoMachine Basic) and SCADA/HMI development  (Wonderware InTouch). As a research assistant and Research and Technology Division Coordinator, I work collaboratively in research teams and communicate technical work clearly.", 
+      "My technical foundation includes data acquisition with Raspberry Pi, Arduino, and ESP32, LabVIEW and Python for monitoring, and Multisim for circuit validation.",
     ],
     focusAreas: ['Instrumentation', 'Control Systems', 'Embedded Systems', 'IoT Protocols'],
   };
@@ -185,11 +185,12 @@
   // Soft Skills (trimmed to the most relevant ones).
   // ---------------------------------------------------------------------
   const skillGroups = [
+    { title: 'Electrical Circuits ', icon: 'gauge', items: ['Circuit Analysis (DC/AC)', 'Analog Circuit Design', 'Circuit Simulation'] },
+    { title: 'Measurement & Testing ', icon: 'gauge', items: ['Multimeter', 'Oscilloscope', 'Function Generator', 'Power Supply', 'Circuit Troubleshooting'] },
     { title: 'Instrumentation', icon: 'gauge', items: ['Sensor Calibration', 'Signal Conditioning', 'Data Acquisition'] },
-    { title: 'Control', icon: 'loop', items: ['PID Control','Fuzzy Logic', 'Closed-Loop Feedback', 'Control System Design'] },
-    { title: 'Embedded Systems', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'UART', 'I2C', 'SPI', 'Modbus RTU/RS-485', 'MQTT'] },
-    { title: 'Programming', icon: 'code', items: ['C/C++', 'Python', 'TypeScript', 'MySQL', 'SQLite'] },
-    { title: 'Tools & Software', icon: 'wrench', items: ['LabVIEW', 'Multisim', 'MATLAB', 'Arduino IDE', 'Visual Studio Code', 'GitHub'] },
+    { title: 'Control', icon: 'loop', items: ['PID Control', 'Closed-Loop Feedback', 'Control System Design'] },
+    { title: 'Embedded Systems', icon: 'chip', items: ['Arduino', 'ESP32', 'Raspberry Pi', 'MQTT', 'C/C++', 'Python','MySQL'] },
+    { title: 'Tools & Software', icon: 'wrench', items: ['LabVIEW', 'Multisim', 'MATLAB', 'SoMachine',  'Wonderware Intouch',  'Arduino IDE', 'Visual Studio Code', 'GitHub'] },
     { title: 'Soft Skills', icon: 'users', items: ['Leadership', 'Communication', 'Critical & Analytical Thinking', 'Teamwork'] },
   ];
 
@@ -218,7 +219,7 @@
         'Research Assistant of IoMT & AI-Based Arrhythmia Monitoring System (data collection assistant)',
         'PKM — Digital Prayer Schedule Display System on Raspberry Pi, Masjid Baitul Maqdis (Electronics Technician)',
         'Robotics Training Instructor for P5 Program at SMAN 17 Pekanbaru',
-        '	Head of Technology Research Division, Electronics Engineering Student Association',
+        'Research and Technology Division Coordinator, Electronics Engineering Student Association',
       ],
     },
     {
@@ -242,10 +243,10 @@
   // NOTE: the first 4 are from the resume; the rest are placeholder examples —
   // swap in your own projects here.
   const projects = [
-    { id: 1, title: 'Multi Stage Signal Conditioning', role: 'Full Stack Developer', category: 'Instrumentation', tags: ['Analog', 'Signal Conditioning', 'Amplifier'], slug: 'multistage-signal-conditioning' },
-    { id: 2, title: 'Aero Pendulum', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID ', 'Embedded ', 'Closed Loop'], slug: 'aero-pendulum' },
-    { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded & Backend Developer', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'lab-environment-monitoring' },
-    { id: 4, title: 'Monostable NE555 Timer', role: 'Embedded Systems Developer', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'monostable-ne555-timer' },
+    { id: 1, title: 'Multi Stage Signal Conditioning', role: 'Instrumentation And Measurement', category: 'Instrumentation', tags: ['Analog', 'Signal Conditioning', 'Amplifier'], slug: 'multistage-signal-conditioning' },
+    { id: 2, title: 'Aero Pendulum', role: 'Control Systems ', category: 'Control System', tags: ['PID ', 'Embedded ', 'Closed Loop'], slug: 'aero-pendulum' },
+    { id: 3, title: 'Lab Environment Monitoring', role: 'Embedded System', category: 'Embedded', tags: ['TypeScript', 'MQTT', 'SQLite'], slug: 'lab-environment-monitoring' },
+    { id: 4, title: 'Monostable NE555 Timer', role: 'Analog Electronic', category: 'Analog', tags: ['Microcontroller', 'OLED', 'PCB Design'], slug: 'monostable-ne555-timer' },
     { id: 5, title: 'Project 1', role: 'Instrumentation Engineer', category: 'Instrumentation', tags: ['Modbus RTU', 'RS-485', 'Node.js'], slug: 'modbus-scada-data-bridge' },
     { id: 6, title: 'Project 2', role: 'Control Systems Engineer', category: 'Control System', tags: ['PID Control', 'IR Sensors', 'Arduino'], slug: 'line-following-robot' },
     { id: 7, title: 'Project 3', role: 'Embedded Systems Developer', category: 'Embedded', tags: ['ESP32', 'MQTT', 'WiFi'], slug: 'iot-weather-station' },
@@ -619,8 +620,14 @@
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {#each skillGroups as group, i}
+          <!-- card terakhir (Soft Skills) dipusatkan:
+               sm (2 kolom) -> span 2 kolom, lebar = 1 kolom, rata tengah
+               lg (3 kolom) -> kolom ke-2 (tengah) -->
           <div
-            class="skill-card group rounded-2xl border border-[var(--border)] bg-[var(--surface)]/40 p-6 transition-all duration-300 hover:border-[var(--accent)]/40 hover:bg-[var(--surface)] hover:-translate-y-1"
+            class="skill-card group rounded-2xl border border-[var(--border)] bg-[var(--surface)]/40 p-6 transition-all duration-300 hover:border-[var(--accent)]/40 hover:bg-[var(--surface)] hover:-translate-y-1
+              {i === skillGroups.length - 1
+                ? 'sm:col-span-2 sm:w-[calc(50%-0.625rem)] sm:justify-self-center lg:col-span-1 lg:col-start-2 lg:w-auto lg:justify-self-stretch'
+                : ''}"
             use:reveal={{ delay: i * 70 }}
           >
             <div class="flex items-center gap-3 mb-5">
@@ -916,6 +923,6 @@
     .star-fall { animation: none !important; opacity: 0.3 !important; }
     .hero-in { animation: none !important; opacity: 1 !important; transform: none !important; }
     :global(.reveal) { opacity: 1 !important; transform: none !important; transition: none !important; }
-    :global(.animate-bounce), :galobal(.animate-ping) { animation: none !important; }
+    :global(.animate-bounce), :global(.animate-ping) { animation: none !important; }
   }
 </style>
