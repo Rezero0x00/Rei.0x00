@@ -227,7 +227,7 @@
       location: 'Balikpapan, Kalimantan Timur, Indonesia',
       date: 'Sep 2020 — Aug 2023',
       degree: 'High School Diploma in Science',
-      score: '90.00 / 100.00',
+      score: '90.25 / 100.00',
       points: [
         'Documentation Staff, Mathematics Enthusiast Community',
         'Member, Islamic Student Organization (Rohis)',
